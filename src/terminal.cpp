@@ -1,21 +1,24 @@
-#include <string.h>
-#include "mbed.h"
-
-#define BUFFER_SIZE 16
-const char N[2] {0xd, '\0'}; // newline character string
+#include "terminal.h"
 
 /**
-* Read inputs from a BufferedSerial into a character buffer
-* Terminates and returns when newline is detected
+* Creates a terminal object that interfaces using BufferedSerial
+* Setting the TX & RX pins to USB creates a connection to the terminal
+**/
+Terminal::Terminal() {
+    serial = new BufferedSerial(USBTX, USBRX);
+}
+
+/**
+* Reads in a line from the terminal, excluding newline
+* Writes a null-terminated string into the provided destination buffer
 * 
 * Parameters:
-*   serial: buffer to read from (should be terminal)
-*   buf: buffer to write to
+*   dest: pointer to destination buffer
 * 
 * Returns:
 *   int: length of string written to buffer or -1 on error
 **/
-int readBuffer(BufferedSerial* serial, char* buf) {
+int Terminal::read(char* dest) {
     int strlen = 0; // length of string stored in character buffer
     int err = 0; // store value returned by BufferedSerial.read()
     bool overflow = false; // calling printf within loop is too slow
@@ -25,15 +28,16 @@ int readBuffer(BufferedSerial* serial, char* buf) {
         if (strlen >= BUFFER_SIZE) { overflow = true; break; }
 
         // read in from serial
-        if ((err = serial->read(buf + strlen, BUFFER_SIZE)) > 0) {
+        if ((err = serial->read(dest + strlen, BUFFER_SIZE)) > 0) {
             strlen += err;
-            buf[strlen] = '\0'; // convert to string
+            dest[strlen] = '\0'; // convert to string
 
             // check for newline
             char* newline; // location of newline
-            if ((newline = strstr(buf, N)) != NULL) {
+            char n[2] {0xd, '\0'}; // newline character string
+            if ((newline = strstr(dest, n)) != NULL) {
                 *newline = '\0'; // change \n to \0
-                strlen = newline - buf;
+                strlen = newline - dest;
                 break;
             }
         } else if (err < 0) {
@@ -45,13 +49,4 @@ int readBuffer(BufferedSerial* serial, char* buf) {
 
     if (overflow) { printf("Buffer overflow\n"); return -1; }
     return strlen;
-}
-
-int main(void) {
-    BufferedSerial serial(USBTX, USBRX);
-    char buf[BUFFER_SIZE] = {};
-
-    int len;
-    if ((len = readBuffer(&serial, buf)) < 0) exit(1);
-    printf("Length of string %s: %d\n", buf, len);
 }
