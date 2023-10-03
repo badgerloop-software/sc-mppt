@@ -1,7 +1,7 @@
 #include "terminal.h"
 
 /**
-* Creates a terminal object that interfaces using BufferedSerial
+* Creates a terminal object that interfaces wit the NUCLEO using BufferedSerial
 * Setting the TX & RX pins to USB creates a connection to the terminal
 **/
 Terminal::Terminal() {
