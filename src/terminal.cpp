@@ -1,24 +1,18 @@
 #include "terminal.h"
 
 /**
-* Creates a terminal object that interfaces wit the NUCLEO using BufferedSerial
-* Setting the TX & RX pins to USB creates a connection to the terminal
-**/
-Terminal::Terminal() {
-    serial = new BufferedSerial(USBTX, USBRX);
-}
-
-/**
-* Reads in a line from the terminal, excluding newline
+* Reads in from the terminal until newline is detected
 * Writes a null-terminated string into the provided destination buffer
+* Newline character is not included in string
 * 
 * Parameters:
-*   dest: pointer to destination buffer
+*   dest (char*): pointer to destination buffer
 * 
 * Returns:
 *   int: length of string written to buffer or -1 on error
 **/
-int Terminal::read(char* dest) {
+int read(char* dest) {
+    BufferedSerial *serial = new BufferedSerial(USBTX, USBRX);
     int strlen = 0; // length of string stored in character buffer
     int err = 0; // store value returned by BufferedSerial.read()
     bool overflow = false; // calling printf within loop is too slow

@@ -6,13 +6,6 @@
 
 #define BUFFER_SIZE 16
 
-class Terminal {
-    private:
-        BufferedSerial *serial;
-
-    public:
-        int read(char* dest);
-        Terminal();
-};
+int read(char* dest);
 
 #endif
