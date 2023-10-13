@@ -6,6 +6,6 @@
 
 #define BUFFER_SIZE 16
 
-int read(char* dest);
+int read(char* dest, int len, bool verbose = false);
 
 #endif
