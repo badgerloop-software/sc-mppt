@@ -15,9 +15,18 @@ typedef struct PID {
 
     // proportional, integral and derivative terms
     float proportional, integral, derivative;
+    
+    // store previous error and measurement
+    float prevErr, prevIn;
+
+    // size of timestep
+    float timestep;
+
+    // derivative damping term
+    float tauD;
 } PID;
 
 void initializePID(PID *pid, float Kp, float Ki, float Kd);
 float updatePID(PID *pid, float setpoint, float input);
 
-#endif
+#endif // PID_H

@@ -17,9 +17,7 @@ void initializePID(PID *pid, float Kp, float Ki, float Kd) {
 
 /**
 * Updates the output value of the controller to target a certain
-* setpoint given an input value. Because the actual control needs
-* to be on discrete values, a Tustin transform is applied onto the
-* Laplace transfer function in the complex domain.
+* setpoint given an input value. Reasoning behind equations in README.
 *
 * Parameters:
 *   pid (PID*): PID controller to update
@@ -32,8 +30,15 @@ void initializePID(PID *pid, float Kp, float Ki, float Kd) {
 float updatePID(PID *pid, float setpoint, float input) {
     float error = setpoint - input;
 
-
+    // proportional term
     pid->proportional = pid->Kp * error;
 
+    // integral term
+    pid->integral = pid->integral + 0.5f * pid->Ki * pid->timestep * (error + pid->prevErr);
+
+    // derivative term
+    pid->derivative = -(2.0f * pid->Kd * (input - pid->prevIn)	/* derivative on measurement, so the equation is negative */
+                        + (2.0f * pid->tauD - pid->timestep) * pid->derivative)
+                        / (2.0f * pid->tauD + pid->timestep);
     return 0;
 }
