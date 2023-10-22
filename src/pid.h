@@ -26,7 +26,7 @@ typedef struct PID {
     float tauD;
 } PID;
 
-void initializePID(PID *pid, float Kp, float Ki, float Kd);
+void initializePID(PID *pid, float Kp, float Ki, float Kd, float timestep);
 float updatePID(PID *pid, float setpoint, float input);
 
 #endif // PID_H
