@@ -9,11 +9,11 @@
 *   Ki (float): proportional integral term
 *   Kd (float): proportional derivative term
 **/
-void initializePID(PID *pid, float Kp, float Ki, float Kd, float timestep) {
+void initializePID(PID *pid, float Kp, float Ki, float Kd) {
     pid->Kp = Kp;
     pid->Ki = Ki;
     pid->Kd = Kd;
-    pid->timestep = timestep;
+    pid->timestep = CYCLE_MS;
 
     // set previous values to default 0
     pid->prevErr = 0;
@@ -33,7 +33,7 @@ void initializePID(PID *pid, float Kp, float Ki, float Kd, float timestep) {
 *   input (float): the input value from the system
 *
 * Returns:
-*   float: the loop output
+*   float: the control value out
 **/
 float updatePID(PID *pid, float setpoint, float input) {
     float error = setpoint - input;
@@ -57,4 +57,15 @@ float updatePID(PID *pid, float setpoint, float input) {
     float unboundedOut = pid->proportional + pid->integral + pid->derivative;
     // bind output between 0 and duty cycle max
     return (unboundedOut < 0) ? 0 : ((unboundedOut > DUTY_MAX) ? DUTY_MAX : unboundedOut);
+}
+
+/**
+* Print the values stored within the PID for debugging purposes.
+* 
+* Parameters:
+*   pid (PID*): PID controller whose data to print
+**/
+void printPID(PID *pid) {
+    printf("Control variables:\nK_p: %f, K_i: %f, K_d: %f\nDerivative clamping term: %f\nTimestep: %f\n", pid->Kp, pid->Ki, pid->Kd, pid->tauD, pid->timestep);
+    printf("Currently stored values:\nP_n: %f, I_n: %f, D_n: %f\nError: %f, Input: %f\n", pid->proportional, pid->integral, pid->derivative, pid->prevErr, pid->prevIn);
 }

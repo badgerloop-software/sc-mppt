@@ -2,9 +2,7 @@
 #define PID_H
 
 #include "mbed.h"
-
-// duty cycle cannot exceed 0.8
-#define DUTY_MAX 0.8
+#include "const.h"
 
 /**
 * Represents a single PID controller.
@@ -26,7 +24,8 @@ typedef struct PID {
     float tauD;
 } PID;
 
-void initializePID(PID *pid, float Kp, float Ki, float Kd, float timestep);
+void initializePID(PID *pid, float Kp, float Ki, float Kd);
 float updatePID(PID *pid, float setpoint, float input);
+void printPID(PID *pid);
 
 #endif // PID_H
