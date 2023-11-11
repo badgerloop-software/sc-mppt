@@ -2,22 +2,22 @@
 
 DataManagement::DataManagement() {}
 
-//Gets the voltage from specificied solar array
-float DataManagement::getVoltIn(int array){
-    return prevData[array].voltIn = inputs[array].vIn.read()*V_SCALE;
+//Gets new voltage from specificied solar array
+float DataManagement::getVoltIn(int arrayIdx){
+    return inputs[arrayIdx].vIn.read()*V_SCALE;
 }
 
 //Gets the current of specificied solar array
-float DataManagement::getCurrIn(int array){
+float DataManagement::getCurrIn(int arrayIdx){
     // Declan's Equation : read()*3.3*0.943+0.0294;
-    
-    return prevData[array].currIn = inputs[array].iIn.read()*I_SCALE;
+    return inputs[arrayIdx].iIn.read()*I_SCALE;
 }
 
-//Calculates the power of specificied solar array
-float DataManagement::getPower(int array){
-    return prevData[array].power = prevData[array].voltIn * prevData[array].currIn;
-}
+// //Calculates the power of specificied solar array
+// float DataManagement::getPower(int arrayIdx){
+//     return prevData[arrayIdx].power = prevData[arrayIdx].voltIn * prevData[arrayIdx].currIn;
+// }
+
 
 //Gets the battery voltage
 float DataManagement::getBattVolt(){
