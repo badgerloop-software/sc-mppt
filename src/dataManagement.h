@@ -1,24 +1,35 @@
 #include "mbed.h"
-#define NUM_ARRAYS 3
-#define BATTERY_VOLT_IN PB_0
+#include "const.h"
+#include "FastPWM.h"
 constexpr float I_SCALE = 5*3.33;
 constexpr float V_SCALE = (103.3/3.3)*3.33;
 constexpr float BV_SCALE = 3.325 * 101;
 
 class DataManagement{
     public:
-        //Gets the voltage from specificied solar array
-        float getVoltIn(int array);
+        //Gets new voltage from specificied solar array
+        float getVoltIn(int arrayIdx);
 
-        //Gets the current of specificied solar array
-        float getCurrIn(int array);
+        //Gets new current of specificied solar array
+        float getCurrIn(int arrayIdx);
 
         //Calculates power using previous voltage/current values
-        float getPower(int array);
+        //float getPower(int arrayIdx);
 
         //Gets the battery voltage
         float getBattVolt();
 
+         struct Data{
+            //Most Power Point Voltage input (Voltage input for max power output)
+            float targetVolt;
+            float dutyCycle;
+            //Most Power Point Voltage Duty (optimal duty cycle to charge battery)
+            float mppDutyCycle;
+        };
+
+        Data data[NUM_ARRAYS];
+
+        FastPWM outputs[NUM_ARRAYS] = {FastPWM(MOSFET_1), FastPWM(MOSFET_2), FastPWM(MOSFET_3)};
 
         DataManagement();
 
@@ -29,19 +40,6 @@ class DataManagement{
         };
 
         AnalogIn batteryVoltIn = AnalogIn(BATTERY_VOLT_IN);
-
-        struct Data{
-            //Most Power Point Voltage input (Voltage input for max power output)
-            float voltIn;
-            float currIn;
-            float power;
-            float targetVolt;
-            float dutyCycle;
-            //Most Power Point Voltage Duty (optimal duty cycle to charge battery)
-            float mppDutyCycle;
-        };
-
-        Data prevData[NUM_ARRAYS];
 
         //Voltage and Current In for each solar array section
         Input inputs[NUM_ARRAYS] = {{AnalogIn(PA_6), AnalogIn(PA_7)},
