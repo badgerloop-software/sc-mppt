@@ -184,6 +184,11 @@ int main() {
 
 
     while (true) {
+        //There are 3 temp sensor, one for each solar array
+        //There is a multiplexer (hence muxed_therm) which selected between the 
+        //3 given the data written to pins them_sel0 and therm_sel1
+        //Temperature data current only printed, might be useful to help calculate mpp
+
         therm_sel0.write(0);
         therm_sel1.write(0);
         

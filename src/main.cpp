@@ -4,13 +4,7 @@
 #include "dataManagement.h"
 #include "const.h"
 
-MPPT mppt1;
-MPPT mppt2;
-MPPT mppt3;
 
-PID pid1;
-PID pid2;
-PID pid3;
 
 static unsigned long long cycles = 0;
 
@@ -83,4 +77,78 @@ int main(void) {
         
     }
 
+}
+
+void mppt_INCCOND(void)
+{
+long delta_i;
+long delta_v;
+long delta_p;
+
+    mpp = (long) f_iin * f_vin;
+    delta_p = power - l_power;
+
+    delta_i = (long) f_iin - fl_iin;
+    delta_v = (long) f_vin - fl_vin;
+
+    if(delta_v)
+    {
+        ineq = delta_p / delta_v;
+        if(ineq > 0) vinref += VOLTAGE_STEP; else if(ineq < 0) vinref -= VOLTAGE_STEP;
+    } else {
+        if(delta_i > 0) vinref += VOLTAGE_STEP; else if(delta_i < 0) vinref -= VOLTAGE_STEP;
+    }
+    fl_iin = f_iin;
+    fl_vin = f_vin;
+    l_power = power;
+
+    f_iin = 0;
+    f_vin = 0; 
+}
+
+
+Initialize_Hardware();
+while(true)
+{
+    if(T0IF)
+    {
+        T0IF = 0;
+        if(but_cnt) but_cnt--;
+        if(track && mppt_calc) mppt_calc--;
+        if(second) second--;
+        read_ADC();
+    if(!track) {
+        if(battery_state != FAULT)
+        {
+    } else {
+    
+    cc_cv_mode();
+    if(!cmode) pid(vout, vref); else
+    pid(iout, iref);
+    if(increment >= dmax) track = TRACK_DELAY;
+    if(mppt_calc < MPPT_AVERAGE)
+    f_vin += vin;
+    f_iin += iin;
+    if(!mppt_calc)
+    {
+        mppt_calc = MPPT_INTERVAL;
+        mppt_INCCOND();
+        
+    }
+        pid(vinref, vin);
+        if(vout > vref || iout > iref)
+        {
+                track--;
+                dmax = increment;
+                if(!track) Init_State_Machine();
+        } else
+                track = TRACK_DELAY;
+        }
+
+        if(!second)
+        {
+                second = SECOND_COUNT;
+                if(!track) Battery_State_Machine();
+        }
+    }
 }
