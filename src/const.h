@@ -23,5 +23,9 @@
 
 #define MPP_VIN_CYCLES 300
 
+//Number of voltage readings to average
+#define MPPT_AVERAGE 3
+
+#define MPPT_STEP
 
 #endif // CONST_H
