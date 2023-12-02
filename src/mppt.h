@@ -14,6 +14,8 @@ typedef struct MPPT {
     float current;
     float prevCurrent;
     float targetVolt;
+    float power;
+    float prevPower;
     float dutyCycle;
 } MPPT;
 
