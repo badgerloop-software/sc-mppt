@@ -23,9 +23,14 @@
 
 #define MPP_VIN_CYCLES 300
 
+//Loop intervals between MPPT updates
+#define MPPT_INTERVAL 300
+
 //Number of voltage readings to average
 #define MPPT_AVERAGE 3
 
 #define MPPT_STEP
+
+#define TRACK_DELAY 10
 
 #endif // CONST_H
