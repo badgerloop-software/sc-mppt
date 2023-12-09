@@ -22,33 +22,45 @@ float DataManagement::getCurrIn(int arrayIdx){
 //Updates voltage for each solar array
 void DataManagement::incVolt(){
     for (int i = 0; i < NUM_ARRAYS; i++) {
-        mppts[i].voltage += getVoltIn(i);
+        mppts[i].accVolt += mppts[i].voltage;
     }
 }
 
 //Updates current for each solar array
 void DataManagement::incCurr(){
     for (int i = 0; i < NUM_ARRAYS; i++) {
-        mppts[i].voltage += getVoltIn(i);
+        mppts[i].accVolt += mppts[i].voltage;
     }
 }
 
 //Updates previous voltage variable for each solar array
 void DataManagement::updatePrevVolt(){
     for (int i = 0; i < NUM_ARRAYS; i++) {
-        mppts[i].prevVoltage = mppts[i].voltage;
+        mppts[i].prevVoltage = mppts[i].accVolt;
     }
 }
 
 //Updates previous current variable for each solar array
 void DataManagement::updatePrevCurr(){
     for (int i = 0; i < NUM_ARRAYS; i++) {
-        mppts[i].prevCurrent = mppts[i].current;
+        mppts[i].prevCurrent = mppts[i].accCurr;
     }
 }
 
+//Updates previous current variable for each solar array
+void DataManagement::updatePrevPow(){
+    for (int i = 0; i < NUM_ARRAYS; i++) {
+        mppts[i].prevPower = mppts[i].power;
+    }
+}
+
+
 float DataManagement::getVolt(int array_num){
     return mppts[array_num].voltage;
+}
+
+float DataManagement::getVoltAcc(int array_num){
+    return mppts[array_num].accVolt;
 }
 
 float DataManagement::getPrevVolt(int array_num){
@@ -57,6 +69,10 @@ float DataManagement::getPrevVolt(int array_num){
 
 float DataManagement::getCurr(int array_num){
     return mppts[array_num].current;
+}
+
+float DataManagement::getCurrAcc(int array_num){
+    return mppts[array_num].accCurr;
 }
 
 float DataManagement::getPrevCurr(int array_num){
@@ -73,13 +89,13 @@ float DataManagement::getPrevPower(int array_num){
 
 void DataManagement::zeroVolt(){
     for (int i = 0; i < NUM_ARRAYS; i++){
-        mppts[i].voltage = 0;
+        mppts[i].accVolt = 0;
     }
 }
 
 void DataManagement::zeroCurr(){
     for (int i = 0; i < NUM_ARRAYS; i++){
-        mppts[i].current = 0;
+        mppts[i].accVolt = 0;
     }
 }
 
@@ -89,9 +105,11 @@ void DataManagement::read_ADC(){
         mppts[i].current = getCurrIn(i);
         mppts[i].power = mppts[i].voltage * mppts[i].current;
     }
+
+    battVolt = getBattVolt();
 }
 
-//Gets the battery voltage
+//Gets the voltage being sent to battery
 float DataManagement::getBattVolt(){
     return batteryVoltIn.read() * BV_SCALE;
 }
