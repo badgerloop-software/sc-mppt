@@ -26,7 +26,7 @@ typedef struct PID {
 } PID;
 
 void initializePID(PID &pid, float Kp, float Ki, float Kd);
-float updatePID(PID &pid, float setpoint, float input);
+float updatePID(PID &pid, float setpoint, float input, float dT);
 void printPID(PID &pid);
 
 #endif // PID_H

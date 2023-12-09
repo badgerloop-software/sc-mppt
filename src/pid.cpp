@@ -13,7 +13,7 @@ void initializePID(PID *pid, float Kp, float Ki, float Kd) {
     pid->Kp = Kp;
     pid->Ki = Ki;
     pid->Kd = Kd;
-    pid->timestep = CYCLE_MS;
+    //pid->timestep = CYCLE_MS;
 
     // set previous values to default 0
     pid->prevErr = 0;
@@ -35,20 +35,22 @@ void initializePID(PID *pid, float Kp, float Ki, float Kd) {
 * Returns:
 *   float: the control value out
 **/
-float updatePID(PID &pid, float setpoint, float input) {
+float updatePID(PID &pid, float setpoint, float input, float dT) {
+    pid.timestep = dT;
+    
     float error = setpoint - input;
 
     // proportional term
     pid.proportional = pid.Kp * error;
 
     // integral term
-    pid.integral = pid.integral + 0.5f * pid.Ki * pid.timestep * (error + pid.prevErr);
+    pid.integral = pid.integral + 0.5f * pid.Ki * dT * (error + pid.prevErr);
     // integral will probably need anti-wind up, can be added below
 
     // derivative term
     pid.derivative = -(2.0f * pid.Kd * (input - pid.prevIn)	/* derivative on measurement, so the equation is negative */
-                        + (2.0f * pid.tauD - pid.timestep) * pid.derivative)
-                        / (2.0f * pid.tauD + pid.timestep);
+                        + (2.0f * pid.tauD - dT) * pid.derivative)
+                        / (2.0f * pid.tauD + dT);
 
     // store terms for next calculation
     pid.prevErr = error;

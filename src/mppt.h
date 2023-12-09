@@ -10,8 +10,10 @@
 **/
 typedef struct MPPT {
     float voltage;
+    float accVolt;
     float prevVoltage;
     float current;
+    float accCurr;
     float prevCurrent;
     float targetVolt;
     float power;
