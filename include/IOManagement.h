@@ -3,6 +3,7 @@
 
 #include "mbed.h"
 #include "const.h"
+#include "FastPWM.h"
 #include "mppt.h"
 #include "mutexless_analog.h"
 
@@ -26,6 +27,6 @@ void initData(std::chrono::microseconds updatePeriod);
 
 // Sets PWM output for specified array
 // Duty cycle should be a value between 0 and DUTY_MAX Values outside will be capped
-void setPWMOut(uint8_t arrayNumber, float dutyCycle);
+void setPWMOut(uint8_t arrayNumber, double dutyCycle);
 
 #endif // __IO_MANAGEMENT_H__
