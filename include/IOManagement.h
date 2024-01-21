@@ -21,7 +21,7 @@ extern volatile ArrayData arrayData[NUM_ARRAYS];
 extern volatile float battVolt;
 
 // Charging algorithm mode
-enum class ChargeMode : bool {MPPT, CONST_CURR};
+enum class ChargeMode : bool {CONST_CURR, MPPT};
 extern volatile ChargeMode chargeMode;
 
 // Sets up automatic updating of arrayData
