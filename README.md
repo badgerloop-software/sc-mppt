@@ -19,14 +19,21 @@ The maximum power point tracking algorithm (MPPT) has varying implementations wi
 3. See if it actually increased power.
 4. Repeat.
 
-This repo currently implements the Perturb and Observe (PO) MPPT algorithm, with a slight step modification.
-This implementation is chosen for its simplicity and speed, but subject to change based on performance findings.
+This repo currently implements the Perturb and Observe (PO) MPPT algorithm, with a two modifications. Firstly, the step
+size is updated based on change in power. Secondly, the algorithm switches to constant current mode when the battery is 
+over a specified charge threshold to avoid overcharging. This implementation is chosen for its simplicity and speed, but 
+subject to change based on performance findings.
 
+MPPT PO Algorithm
 1. Start at some arbitrary charging voltage
 2. First shift output voltage by a predefined step size
 3. If power output increases, do another larger magnitude step in the same direction
 4. Otherwise if power decreases, do a smaller magnitude step in the opposite direction
 5. Repeat 3 and 4 indefinitely
+
+Constant Current Algorithm
+Same as MPPT, but replace the feedback variable of power with average battery current (target 0).
+
 
 Some additional resources for MPPT algorithms
 https://ww1.microchip.com/downloads/en/appnotes/00001521a.pdf

@@ -1,4 +1,5 @@
 #include "IOManagement.h"
+#include <array>
 
 
 // Solar array voltage, current, and PWM pins and storage variable
@@ -20,6 +21,9 @@ volatile ArrayData arrayData[NUM_ARRAYS];
 AnalogInMutexless batteryVoltIn(BATTERY_VOLT_IN);
 volatile float battVolt;
 
+// Charging algorithm mode
+volatile ChargeMode chargeMode = ChargeMode::MPPT;
+
 // Ticker to poll input readings at fixed rate
 Ticker dataUpdater;
 
@@ -28,11 +32,14 @@ void updateData() {
     for (int i = 0; i < NUM_ARRAYS; i++) {
         arrayData[i].voltage = arrayInputs[i].voltPin.read() * V_SCALE;
         arrayData[i].current = arrayInputs[i].currPin.read() * I_SCALE;
-        arrayData[i].power = arrayData[i].voltage * arrayData[i].current;
+        arrayData[i].lastPower = arrayData[i].curPower;
+        arrayData[i].curPower = arrayData[i].voltage * arrayData[i].current;
         arrayData[i].dutyCycle = arrayInputs[i].pwmPin.read();
     }
 
     battVolt = batteryVoltIn.read() * BATT_V_SCALE;
+    if (battVolt > CONST_CURR_THRESH) chargeMode = ChargeMode::CONST_CURR;
+    else if (battVolt < MPPT_THRESH) chargeMode = ChargeMode::MPPT;
 }
 
 

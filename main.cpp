@@ -5,15 +5,14 @@
 #include "terminal.h"
 
 
-// Controls PWM-Voltage converters
+// Enables PWM-Voltage converters
 DigitalIn boost_en(PB_7);
-
 
 
 int main() {
     Terminal term;
-
     initData(IO_UPDATE_PERIOD);
+    initMPPT(MPPT_UPDATE_PERIOD);
 
     while (true) {
 
