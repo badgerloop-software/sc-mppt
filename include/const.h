@@ -52,9 +52,16 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 // Battery voltage threshold to switch back to MPPT mode
 #define MPPT_THRESH 88
 
-// ------------- TESTING CONSTANTS -------------
+// ------------- TESTING/OTHER CONSTANTS -------------
 // Whether to log data and steps in file. Should only be enabled
 // when microcontroller outputting via serial 
 #define DEBUG_PRINT 0
+
+// How fast to transmit data over CAN (and debug prints if on)
+#define DATA_SEND_PERIOD 250ms
+
+// CAN Pins
+#define CAN_RX PA_11
+#define CAN_TX PA_12
 
 #endif // CONST_H
