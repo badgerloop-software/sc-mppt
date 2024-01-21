@@ -52,5 +52,9 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 // Battery voltage threshold to switch back to MPPT mode
 #define MPPT_THRESH 88
 
+// ------------- TESTING CONSTANTS -------------
+// Whether to log data and steps in file. Should only be enabled
+// when microcontroller outputting via serial 
+#define DEBUG_PRINT 0
 
 #endif // CONST_H
