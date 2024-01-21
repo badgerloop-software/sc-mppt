@@ -4,21 +4,25 @@
 #include "mbed.h"
 #include "const.h"
 #include "FastPWM.h"
-#include "mppt.h"
 #include "mutexless_analog.h"
 
 
 // Solar array and battery data
 typedef struct ArrayData {
-    float voltage;
-    float current;
-    float power;
-    float dutyCycle;
+    double dutyCycle = INIT_VOLT;
+    float voltage = 0;
+    float current = 0;
+    float curPower = 0;
+    float lastPower = 0;
+    float step = INIT_VOLT_STEP;
 } ArrayData;
 
 extern volatile ArrayData arrayData[NUM_ARRAYS];
 extern volatile float battVolt;
 
+// Charging algorithm mode
+enum class ChargeMode : bool {MPPT, CONST_CURR};
+extern volatile ChargeMode chargeMode;
 
 // Sets up automatic updating of arrayData
 // at specified period

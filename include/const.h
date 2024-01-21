@@ -30,16 +30,27 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 #define PWM_OUT_2 PA_10
 #define PWM_OUT_3 PA_8
 
-// duty cycle cannot exceed 0.8
+// ------------- MPPT ALGO CONSTANTS -------------
+// Initial voltage (PWM duty cycle)
+#define INIT_VOLT 0.4
+
+// initial step size for MPPT updates
+#define INIT_VOLT_STEP 0.05
+
+// maximum step size for MPPT updates
+#define MAX_VOLT_STEP 0.2
+
+// maximum PWM duty cycle
 #define DUTY_MAX 0.8
 
-
-// ------------- MPPT ALGO CONSTANTS -------------
-// initial step size of voltage
-#define INIT_VOLT_STEP 0.5f
-
 // Frequency of MPPT algo updates
-#define MPPT__UPDATE_INTERVAL 300ms
+#define MPPT_UPDATE_PERIOD 250ms
+
+// Battery voltage threshold to switch to constant current
+#define CONST_CURR_THRESH 90
+
+// Battery voltage threshold to switch back to MPPT mode
+#define MPPT_THRESH 88
 
 
 #endif // CONST_H
