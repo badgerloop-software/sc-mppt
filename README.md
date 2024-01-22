@@ -34,6 +34,8 @@ MPPT PO Algorithm
 Constant Current Algorithm
 Same as MPPT, but replace the feedback variable of power with average battery current (target 0).
 
+## Additional Features
+Overvoltage fault reset triggered through CAN with message ID 0x600
 
 Some additional resources for MPPT algorithms
 https://ww1.microchip.com/downloads/en/appnotes/00001521a.pdf

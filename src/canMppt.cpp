@@ -1,10 +1,12 @@
 #include "canMppt.h"
 
+DigitalOut OVFaultReset(PB_6, 0);
 
 CANMPPT::CANMPPT(PinName rd, PinName td, int frequency) : CANManager(rd, td, frequency) {};
 
 void CANMPPT::readHandler(int messageID, SharedPtr<unsigned char> data, int length) {
-    
+    if (messageID == 0x600 && *data == 1) OVFaultReset.write(1);
+    else OVFaultReset.write(0);
 }
 
 void CANMPPT::sendMPPTData() {
