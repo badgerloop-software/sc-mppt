@@ -36,6 +36,7 @@ Same as MPPT, but replace the feedback variable of power with average battery cu
 
 ## Additional Features
 Overvoltage fault reset triggered through CAN with message ID 0x600
+Discharging of output capacitors triggered through CAN with message ID 0x601
 
 Some additional resources for MPPT algorithms
 https://ww1.microchip.com/downloads/en/appnotes/00001521a.pdf

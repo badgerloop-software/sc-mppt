@@ -30,6 +30,10 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 #define PWM_OUT_2 PA_10
 #define PWM_OUT_3 PA_8
 
+// CAN triggered outputs
+#define OV_FAULT_RST_PIN PB_6
+#define DISCHARGE_CAPS_PIN PB_1
+
 // ------------- MPPT ALGO CONSTANTS -------------
 // Initial voltage (PWM duty cycle)
 #define INIT_VOLT 0.4
