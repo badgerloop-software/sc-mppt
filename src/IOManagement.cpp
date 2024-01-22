@@ -21,6 +21,11 @@ volatile ArrayData arrayData[NUM_ARRAYS];
 AnalogInMutexless batteryVoltIn(BATTERY_VOLT_IN);
 volatile float battVolt;
 
+// Temperature reading pins (single ADC, select thermistor via multiplexer)
+DigitalOut thermMuxSel0(PB_5);
+DigitalOut thermMuxSel1(PB_4);
+AnalogInMutexless thermPin(PA_0);
+
 // Charging algorithm mode
 volatile ChargeMode chargeMode = ChargeMode::MPPT;
 
@@ -30,11 +35,16 @@ Ticker dataUpdater;
 
 void updateData() {
     for (int i = 0; i < NUM_ARRAYS; i++) {
+        // Update mux selection at start for time to update, then read at end
+        // Inputs corresponds to bits 0 and 1 of array number
+        thermMuxSel0.write(i & 0x1);
+        thermMuxSel1.write(i & 0x2);
         arrayData[i].voltage = arrayInputs[i].voltPin.read() * V_SCALE;
         arrayData[i].current = arrayInputs[i].currPin.read() * I_SCALE;
         arrayData[i].lastPower = arrayData[i].curPower;
         arrayData[i].curPower = arrayData[i].voltage * arrayData[i].current;
         arrayData[i].dutyCycle = arrayInputs[i].pwmPin.read();
+        arrayData[i].temp = thermPin.read();
     }
 
     battVolt = batteryVoltIn.read() * BATT_V_SCALE;

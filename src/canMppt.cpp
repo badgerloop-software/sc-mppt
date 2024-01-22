@@ -4,7 +4,7 @@
 CANMPPT::CANMPPT(PinName rd, PinName td, int frequency) : CANManager(rd, td, frequency) {};
 
 void CANMPPT::readHandler(int messageID, SharedPtr<unsigned char> data, int length) {
-
+    
 }
 
 void CANMPPT::sendMPPTData() {
@@ -13,6 +13,6 @@ void CANMPPT::sendMPPTData() {
     for (int i = 0; i < NUM_ARRAYS; i++) {
         this->sendMessage(0x401 + 3*i, (void*)&(arrayData[i].voltage), sizeof(float));
         this->sendMessage(0x402 + 3*i, (void*)&(arrayData[i].current), sizeof(float));
-        this->sendMessage(0x403 + 3*i, (void*)&(arrayData[i].voltage), sizeof(float)); // Placeholder until temp reading implemented
+        this->sendMessage(0x403 + 3*i, (void*)&(arrayData[i].temp), sizeof(float)); // Placeholder until temp reading implemented
     }
 }
