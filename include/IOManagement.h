@@ -15,6 +15,7 @@ typedef struct ArrayData {
     float curPower = 0;
     float lastPower = 0;
     float step = INIT_VOLT_STEP;
+    float temp = 0;
 } ArrayData;
 
 extern volatile ArrayData arrayData[NUM_ARRAYS];
