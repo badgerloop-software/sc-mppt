@@ -34,4 +34,10 @@ void initData(std::chrono::microseconds updatePeriod);
 // Duty cycle should be a value between 0 and DUTY_MAX Values outside will be capped
 void setPWMOut(uint8_t arrayNumber, double dutyCycle);
 
+// Sets clearing of OV fault
+void setOVFaultReset(uint8_t value);
+
+// Controls discharging of output capacitors thorugh resistor path
+void setCapDischarge(uint8_t value);
+
 #endif // __IO_MANAGEMENT_H__

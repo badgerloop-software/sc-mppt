@@ -26,6 +26,10 @@ DigitalOut thermMuxSel0(PB_5);
 DigitalOut thermMuxSel1(PB_4);
 AnalogInMutexless thermPin(PA_0);
 
+// Misc controlled outputs. Default to nominal state
+DigitalOut OVFaultReset(OV_FAULT_RST_PIN, 0);
+DigitalOut capDischarge(DISCHARGE_CAPS_PIN, 1);
+
 // Charging algorithm mode
 volatile ChargeMode chargeMode = ChargeMode::MPPT;
 
@@ -61,4 +65,13 @@ void initData(std::chrono::microseconds updatePeriod) {
 void setPWMOut(uint8_t arrayNumber, double dutyCycle) {
     if (dutyCycle > DUTY_MAX) dutyCycle = DUTY_MAX;
     arrayInputs[arrayNumber].pwmPin.write(dutyCycle);
+}
+
+void setOVFaultReset(uint8_t value) {
+    OVFaultReset.write(value);
+}
+
+
+void setCapDischarge(uint8_t value) {
+    capDischarge.write(value);
 }
