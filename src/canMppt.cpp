@@ -5,10 +5,10 @@ CANMPPT::CANMPPT(PinName rd, PinName td, int frequency) : CANManager(rd, td, fre
 
 void CANMPPT::readHandler(int messageID, SharedPtr<unsigned char> data, int length) {
     switch (messageID) {
-        case 0x600:
+        case 0x050:
             setOVFaultReset(*data);
             break;
-        case 0x601:
+        case 0x051:
             setCapDischarge(*data);
             break;
         default:
