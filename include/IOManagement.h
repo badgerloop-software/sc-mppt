@@ -5,6 +5,7 @@
 #include "const.h"
 #include "FastPWM.h"
 #include "mutexless_analog.h"
+#include "PID.h"
 
 
 // Solar array and battery data
@@ -25,14 +26,14 @@ extern volatile float battVolt;
 enum class ChargeMode : bool {CONST_CURR, MPPT};
 extern volatile ChargeMode chargeMode;
 
-// Sets up automatic updating of arrayData
-// at specified period
+// Sets up automatic updating of IO at specified period
+// New input data will automatically be written to arrayData
 void initData(std::chrono::microseconds updatePeriod);
 
 
-// Sets PWM output for specified array
-// Duty cycle should be a value between 0 and DUTY_MAX Values outside will be capped
-void setPWMOut(uint8_t arrayNumber, double dutyCycle);
+// Sets voltage output for specified array
+// Value will be capped if outside V_MIN or V_MAX specified in const.h
+void setVoltOut(uint8_t arrayNumber, float voltage);
 
 // Sets clearing of OV fault
 void setOVFaultReset(uint8_t value);

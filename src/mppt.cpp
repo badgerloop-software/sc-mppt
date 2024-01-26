@@ -9,7 +9,7 @@ void mpptUpdate() {
     if (chargeMode == ChargeMode::CONST_CURR) {
         // TEMPORARY: SHUTOFF CHARGING
         for (int i = 0; i < NUM_ARRAYS; i++) {
-            setPWMOut(i, 0);
+            setVoltOut(i, 0);
         }
         return;
     }
@@ -29,7 +29,7 @@ void mpptUpdate() {
         else if (arrayData[i].step < -MAX_VOLT_STEP) arrayData[i].step = -MAX_VOLT_STEP;
         else if (arrayData[i].step == 0) arrayData[i].step = 0.000000001;
 
-        setPWMOut(i, arrayData[i].dutyCycle + arrayData[i].step);
+        setVoltOut(i, arrayData[i].dutyCycle + arrayData[i].step);
     }
 }
 
