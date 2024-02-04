@@ -6,6 +6,7 @@
 #include "FastPWM.h"
 #include "mutexless_analog.h"
 #include "PID.h"
+#include "thermistor.h"
 
 
 // Solar array and battery data
@@ -14,13 +15,14 @@ typedef struct ArrayData {
     float voltage = 0;
     float current = 0;
     float curPower = 0;
-    float lastPower = 0;
-    float step = INIT_VOLT_STEP;
     float temp = 0;
 } ArrayData;
 
 extern volatile ArrayData arrayData[NUM_ARRAYS];
 extern volatile float battVolt;
+
+// If boost converter enabled
+extern volatile bool boostEnabled;
 
 // Charging algorithm mode
 enum class ChargeMode : bool {CONST_CURR, MPPT};

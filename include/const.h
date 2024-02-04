@@ -77,7 +77,7 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 // ------------- TESTING/OTHER CONSTANTS -------------
 // Whether to log data and steps in file. Should only be enabled
 // when microcontroller outputting via serial 
-#define DEBUG_PRINT 0
+#define DEBUG_PRINT 1
 
 // How fast to transmit data over CAN (and debug prints if on)
 #define DATA_SEND_PERIOD 500ms

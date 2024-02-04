@@ -17,6 +17,9 @@ ArrayPins arrayPins[NUM_ARRAYS] = {
 
 volatile ArrayData arrayData[NUM_ARRAYS];
 
+// Enables PWM-Voltage converters
+DigitalIn boost_en(PB_7);
+volatile bool boostEnabled;
 
 // Battery voltage pin and storage
 AnalogInMutexless batteryVoltIn(BATTERY_VOLT_PIN);
@@ -26,7 +29,7 @@ volatile float battVolt;
 // Temperature reading pins (single ADC, select thermistor via multiplexer)
 DigitalOut thermMuxSel0(PB_5);
 DigitalOut thermMuxSel1(PB_4);
-AnalogInMutexless thermPin(PA_0);
+Thermistor thermPin(NCP21XM472J03RA_Constants, PA_0, 10000);
 
 
 // Misc controlled outputs. Default to nominal state
@@ -50,10 +53,9 @@ void updateData() {
         thermMuxSel1.write(i & 0x2);
         arrayData[i].voltage = arrayPins[i].voltPin.read() * V_SCALE;
         arrayData[i].current = arrayPins[i].currPin.read() * I_SCALE;
-        arrayData[i].lastPower = arrayData[i].curPower;
         arrayData[i].curPower = arrayData[i].voltage * arrayData[i].current;
         arrayData[i].dutyCycle = arrayPins[i].pwmPin.read();
-        arrayData[i].temp = thermPin.read();
+        arrayData[i].temp = thermPin.get_temperature();
 
         // Output duty cycle update, shut off if over threshold
         if (arrayData[i].voltage > V_MAX) {
@@ -62,8 +64,9 @@ void updateData() {
             arrayPins[i].pidController.setProcessValue(arrayData[i].voltage);
             arrayPins[i].pwmPin.write(arrayPins[i].pidController.compute());
         }
-        
     }
+
+    boostEnabled = boost_en.read();
 
     battVolt = batteryVoltIn.read() * BATT_V_SCALE;
     if (battVolt > CONST_CURR_THRESH) chargeMode = ChargeMode::CONST_CURR;
