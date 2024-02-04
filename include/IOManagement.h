@@ -4,6 +4,7 @@
 #include "mbed.h"
 #include "const.h"
 #include "FastPWM.h"
+#include "INA281.h"
 #include "mutexless_analog.h"
 #include "PID.h"
 #include "thermistor.h"
