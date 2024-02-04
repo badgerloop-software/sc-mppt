@@ -47,8 +47,8 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 #define PID_IN_MAX 115
 
 // PID output limits (controls PWM duty cycles)
-#define PWM_DUTY_MIN 0
-#define PWM_DUTY_MAX 0.8
+#define PWM_DUTY_MIN 0.2
+#define PWM_DUTY_MAX 1
 #define PWM_PERIOD_US 13
 
 // ------------- MPPT ALGO CONSTANTS -------------

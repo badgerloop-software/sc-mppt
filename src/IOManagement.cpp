@@ -62,7 +62,7 @@ void updateData() {
             arrayPins[i].pwmPin.write(0);
         } else {
             arrayPins[i].pidController.setProcessValue(arrayData[i].voltage);
-            arrayPins[i].pwmPin.write(arrayPins[i].pidController.compute());
+            arrayPins[i].pwmPin.write(1 - arrayPins[i].pidController.compute());
         }
     }
 
