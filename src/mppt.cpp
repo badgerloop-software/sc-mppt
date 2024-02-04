@@ -5,6 +5,11 @@ Ticker mpptUpdater;
 
 
 void mpptUpdate() {
+    // Tracks last power
+    static float oldPower = 0.0;
+    static float stepSize = INIT_VOLT_STEP;
+    static float targetVoltage = INIT_VOLT;
+
     // Constant current mode
     if (chargeMode == ChargeMode::CONST_CURR) {
         // TEMPORARY: SHUTOFF CHARGING
@@ -15,22 +20,32 @@ void mpptUpdate() {
     }
 
     // MPPT PO Mode
+    // Get total power from arrays
+    float curPower = 0.0;
     for (int i = 0; i < NUM_ARRAYS; i++) {
-        // Last step increased power, bigger step in same direction
-        if (arrayData[i].curPower > arrayData[i].lastPower) {
-            arrayData[i].step = 1.5 * arrayData[i].step;
-        // Else lowered power, smaller step in opposite direction
-        } else {
-            arrayData[i].step = -0.5 * arrayData[i].step;
-        }
-
-        // Cap step size, do not allow zero 
-        if (arrayData[i].step > MAX_VOLT_STEP) arrayData[i].step = MAX_VOLT_STEP;
-        else if (arrayData[i].step < -MAX_VOLT_STEP) arrayData[i].step = -MAX_VOLT_STEP;
-        else if (arrayData[i].step == 0) arrayData[i].step = 0.000000001;
-
-        setVoltOut(i, arrayData[i].dutyCycle + arrayData[i].step);
+        curPower += arrayData[i].curPower;
     }
+
+    // If last step increased power, do bigger step in same direction. Else smaller step opposite direction
+    if (curPower > oldPower) {
+        stepSize *= 1.5;
+    } else {
+        stepSize *= -0.5;
+    }
+
+    // Make sure step size not too large, do not allow 0
+    if (stepSize > MAX_VOLT_STEP) stepSize = MAX_VOLT_STEP;
+    else if (stepSize < -MAX_VOLT_STEP) stepSize = -MAX_VOLT_STEP;
+    else if (stepSize == 0) stepSize = 0.000000001;
+
+    // Update voltage target for arrays
+    targetVoltage += stepSize;
+    for (int i = 0; i < NUM_ARRAYS; i++) {
+        setVoltOut(i, targetVoltage);
+    }
+
+    // Update power for next cycle
+    oldPower = curPower;
 }
 
 
