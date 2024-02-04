@@ -27,10 +27,10 @@ void mpptUpdate() {
     }
 
     // If last step increased power, do bigger step in same direction. Else smaller step opposite direction
-    if (curPower > oldPower) {
-        stepSize *= 1.5;
+    if (curPower < oldPower) {
+        stepSize *= -0.8;
     } else {
-        stepSize *= -0.5;
+        stepSize *= 1.4;
     }
 
     // Make sure step size not too large, do not allow 0

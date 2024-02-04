@@ -46,9 +46,6 @@ Ticker dataUpdater;
 
 // Updates arrayData with new input values and PWM outputs based on PID loop
 void updateData() {
-    boostEnabled = boost_en.read();
-    battVolt = batteryVoltIn.read() * BATT_V_SCALE;
-
     for (int i = 0; i < NUM_ARRAYS; i++) {
         // Update temperature mux selection at start for time to update, then read at end
         // Inputs corresponds to bits 0 and 1 of array number
@@ -64,10 +61,13 @@ void updateData() {
         if (arrayData[i].voltage > V_MAX) {
             arrayPins[i].pwmPin.write(0);
         } else {
-            arrayPins[i].pidController.setProcessValue(battVolt);
+            arrayPins[i].pidController.setProcessValue(arrayData[i].voltage);
             arrayPins[i].pwmPin.write(arrayPins[i].pidController.compute());
         }
     }
+
+    boostEnabled = boost_en.read();
+    battVolt = batteryVoltIn.read() * BATT_V_SCALE;
 
     if (battVolt > CONST_CURR_THRESH) chargeMode = ChargeMode::CONST_CURR;
     else if (battVolt < MPPT_THRESH) chargeMode = ChargeMode::MPPT;

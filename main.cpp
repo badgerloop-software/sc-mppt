@@ -20,7 +20,7 @@ void debugPrint() {
 
 int main() {
     initData(IO_UPDATE_PERIOD);
-    //initMPPT(MPPT_UPDATE_PERIOD);
+    initMPPT(MPPT_UPDATE_PERIOD);
     //CANMPPT canBus(CAN_RX, CAN_TX);
 
     while (true) {
