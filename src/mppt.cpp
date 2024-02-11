@@ -12,13 +12,31 @@ void mpptUpdate() {
 
     // Constant current mode
     if (chargeMode == ChargeMode::CONST_CURR) {
-        if (totalCurrent > CONST_CURR_THRESH) {
-            if () {
-                arrayData[i].step = 1.5 * arrayData[i].step;
-            } else {
-                arrayData[i].step = -0.5 * arrayData[i].step;
+        if (totalCurrent > CONST_CURR_THRESH) { // above threshold
+            if (totalCurrent > lastCurrent) { // current is increasing, switch direction
+                stepSize *= -0.8;
+            } else { // current is decreasing, keep going
+                stepSize *= 1.4;
+            }
+        } else { // below threshold
+            if (totalCurrent > lastCurrent) { // current is increasing, keep going
+                stepSize *= 1.4;
+            } else { // current is decreasing, switch direction
+                stepSize *= -0.8;
             }
         }
+
+        // Make sure step size not too large, do not allow 0
+        if (stepSize > MAX_VOLT_STEP) stepSize = MAX_VOLT_STEP;
+        else if (stepSize < -MAX_VOLT_STEP) stepSize = -MAX_VOLT_STEP;
+        else if (stepSize == 0) stepSize = 0.000000001;
+
+        // Update voltage target for arrays
+        targetVoltage += stepSize;
+        for (int i = 0; i < NUM_ARRAYS; i++) {
+            setVoltOut(i, targetVoltage);
+        }
+        
         return;
     }
    

@@ -38,8 +38,8 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 
 // --------------- PID/PWM CONSTANTS -----------------
 // Loop parameters
-#define P_TERM 0.1
-#define I_TERM 0.1
+#define P_TERM -0.1
+#define I_TERM -0.1
 #define D_TERM 0
 
 // Input range
@@ -47,8 +47,8 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 #define PID_IN_MAX 115
 
 // PID output limits (controls PWM duty cycles)
-#define PWM_DUTY_MIN 0.2
-#define PWM_DUTY_MAX 1
+#define PWM_DUTY_MIN 0
+#define PWM_DUTY_MAX 0.8
 #define PWM_PERIOD_US 13
 
 // ------------- MPPT ALGO CONSTANTS -------------
@@ -68,10 +68,12 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 #define MPPT_UPDATE_PERIOD 500ms
 
 // Current threshold to switch to constant current
-#define CONST_CURR_THRESH packChargeCurrentLimit-2
+#define CONST_CURR_THRESH packChargeCurrentLimit
 
 // Current threshold to switch to MPPT
-#define MPPT_THRESH packChargeCurrentLimit-5
+#define MPPT_THRESH packChargeCurrentLimit-2
+
+#define CONST_CURR_SAFETY_MULT 0.9
 
 // ------------- TESTING/OTHER CONSTANTS -------------
 // Whether to log data and steps in file. Should only be enabled

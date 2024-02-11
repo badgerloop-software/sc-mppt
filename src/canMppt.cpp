@@ -12,7 +12,7 @@ void CANMPPT::readHandler(int messageID, SharedPtr<unsigned char> data, int leng
             setCapDischarge(*data);
             break;
         case 0x103:
-            packChargeCurrentLimit = *data;
+            packChargeCurrentLimit = (float)(*(uint16_t*)data.get()) * CONST_CURR_SAFETY_MULT;
             break;
         default:
             break;
