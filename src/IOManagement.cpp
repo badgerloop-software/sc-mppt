@@ -25,7 +25,6 @@ volatile bool boostEnabled;
 AnalogInMutexless batteryVoltIn(BATTERY_VOLT_PIN);
 volatile float battVolt;
 
-
 // Temperature reading pins (single ADC, select thermistor via multiplexer)
 DigitalOut thermMuxSel0(PB_5);
 DigitalOut thermMuxSel1(PB_4);
@@ -36,6 +35,12 @@ Thermistor thermPin(NCP21XM472J03RA_Constants, PA_0, 10000);
 DigitalOut OVFaultReset(OV_FAULT_RST_PIN, 0);
 DigitalOut capDischarge(DISCHARGE_CAPS_PIN, 1);
 
+// Pack charge current limit
+volatile float packChargeCurrentLimit = 0;
+
+// Current storage
+volatile float totalCurrent = 0;
+volatile float lastCurrent = 0;
 
 // Charging algorithm mode
 volatile ChargeMode chargeMode = ChargeMode::MPPT;
@@ -46,6 +51,8 @@ Ticker dataUpdater;
 
 // Updates arrayData with new input values and PWM outputs based on PID loop
 void updateData() {
+    lastCurrent = totalCurrent;
+    totalCurrent = 0;
     for (int i = 0; i < NUM_ARRAYS; i++) {
         // Update temperature mux selection at start for time to update, then read at end
         // Inputs corresponds to bits 0 and 1 of array number
@@ -62,15 +69,17 @@ void updateData() {
             arrayPins[i].pwmPin.write(0);
         } else {
             arrayPins[i].pidController.setProcessValue(arrayData[i].voltage);
-            arrayPins[i].pwmPin.write(1 - arrayPins[i].pidController.compute());
+            arrayPins[i].pwmPin.write(arrayPins[i].pidController.compute());
         }
+
+        totalCurrent += arrayData[i].current;
     }
 
     boostEnabled = boost_en.read();
     battVolt = batteryVoltIn.read() * BATT_V_SCALE;
 
-    if (battVolt > CONST_CURR_THRESH) chargeMode = ChargeMode::CONST_CURR;
-    else if (battVolt < MPPT_THRESH) chargeMode = ChargeMode::MPPT;
+    if (totalCurrent > CONST_CURR_THRESH) chargeMode = ChargeMode::CONST_CURR;
+    else if (totalCurrent < MPPT_THRESH) chargeMode = ChargeMode::MPPT;
 }
 
 

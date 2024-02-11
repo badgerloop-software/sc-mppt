@@ -11,6 +11,9 @@ void CANMPPT::readHandler(int messageID, SharedPtr<unsigned char> data, int leng
         case 0x051:
             setCapDischarge(*data);
             break;
+        case 0x103:
+            packChargeCurrentLimit = *data;
+            break;
         default:
             break;
     }
