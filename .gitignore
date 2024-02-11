@@ -6,4 +6,3 @@ mbed-os
 BUILD
 FastPWM
 PID
-embedded/mbed-os

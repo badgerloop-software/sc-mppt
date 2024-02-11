@@ -30,10 +30,11 @@ enum class ChargeMode : bool {CONST_CURR, MPPT};
 extern volatile ChargeMode chargeMode;
 
 // pack charge current limit
-extern volatile uint16_t packChargeCurrentLimit;
+extern volatile float packChargeCurrentLimit;
 
-// total current from all solar arrays
+// total and last current from all solar arrays
 extern volatile float totalCurrent;
+extern volatile float lastCurrent;
 
 // Sets up automatic updating of IO at specified period
 // New input data will automatically be written to arrayData
