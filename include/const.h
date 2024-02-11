@@ -67,11 +67,11 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 // Frequency of MPPT algo updates
 #define MPPT_UPDATE_PERIOD 500ms
 
-// Battery voltage threshold to switch to constant current
-#define CONST_CURR_THRESH 90
+// Current threshold to switch to constant current
+#define CONST_CURR_THRESH packChargeCurrentLimit-2
 
-// Battery voltage threshold to switch back to MPPT mode
-#define MPPT_THRESH 88
+// Current threshold to switch to MPPT
+#define MPPT_THRESH packChargeCurrentLimit-5
 
 // ------------- TESTING/OTHER CONSTANTS -------------
 // Whether to log data and steps in file. Should only be enabled

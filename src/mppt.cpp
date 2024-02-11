@@ -12,13 +12,17 @@ void mpptUpdate() {
 
     // Constant current mode
     if (chargeMode == ChargeMode::CONST_CURR) {
-        // TEMPORARY: SHUTOFF CHARGING
-        for (int i = 0; i < NUM_ARRAYS; i++) {
-            setVoltOut(i, 0);
+        if (totalCurrent > CONST_CURR_THRESH) {
+            if () {
+                arrayData[i].step = 1.5 * arrayData[i].step;
+            } else {
+                arrayData[i].step = -0.5 * arrayData[i].step;
+            }
         }
         return;
     }
-
+   
+    
     // MPPT PO Mode
     // Get total power from arrays
     float curPower = 0.0;
