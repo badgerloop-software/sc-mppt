@@ -81,7 +81,7 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 #define DEBUG_PRINT 1
 
 // How fast to transmit data over CAN (and debug prints if on)
-#define DATA_SEND_PERIOD 500ms
+#define DATA_SEND_PERIOD 100ms
 
 // CAN Pins
 #define CAN_RX PA_11
