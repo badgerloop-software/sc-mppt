@@ -19,16 +19,27 @@ void debugPrint() {
 #endif
 
 int main() {
+#if DEBUG_PRINT
+    BufferedSerial serial(USBTX, USBRX, 115200);
+    int counter = 0;
+#endif
+
+
     initData(IO_UPDATE_PERIOD);
     initMPPT(MPPT_UPDATE_PERIOD);
     CANMPPT canBus(CAN_RX, CAN_TX);
 
     while (true) {
 #if DEBUG_PRINT
-        debugPrint();
+        // Display digital and analog values every second (for testing) 
+        if (counter >= (1000 / DATA_SEND_PERIOD.count())) {
+            debugPrint();
+            counter = 0;
+        }
+        counter++;
 #endif
+
         canBus.sendMPPTData();
         canBus.runQueue(DATA_SEND_PERIOD);
-        wait_us(1000000);
     }
 }
