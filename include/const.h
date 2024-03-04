@@ -41,6 +41,9 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 #define P_TERM -0.1
 #define I_TERM -0.1
 #define D_TERM 0
+#define P_curr_term -0.1
+#define I_curr_term -0.1
+#define D_curr_term 0
 
 // Input range
 #define PID_IN_MIN 0
@@ -64,6 +67,8 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 // Maximum voltage the algo loop can target (want safe offset under danger V_MAX)
 #define V_TARGET_MAX 105
 
+//Maximum current the algo loop can target
+#define I_TARGET_MAX 10
 // Frequency of MPPT algo updates
 #define MPPT_UPDATE_PERIOD 500ms
 

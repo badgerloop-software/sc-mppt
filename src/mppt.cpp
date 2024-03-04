@@ -12,31 +12,15 @@ void mpptUpdate() {
 
     // Constant current mode
     if (chargeMode == ChargeMode::CONST_CURR) {
-        if (totalCurrent > CONST_CURR_THRESH) { // above threshold
-            if (totalCurrent > lastCurrent) { // current is increasing, switch direction
-                stepSize *= -0.8;
-            } else { // current is decreasing, keep going
-                stepSize *= 1.4;
-            }
-        } else { // below threshold
-            if (totalCurrent > lastCurrent) { // current is increasing, keep going
-                stepSize *= 1.4;
-            } else { // current is decreasing, switch direction
-                stepSize *= -0.8;
-            }
-        }
-
-        // Make sure step size not too large, do not allow 0
-        if (stepSize > MAX_VOLT_STEP) stepSize = MAX_VOLT_STEP;
-        else if (stepSize < -MAX_VOLT_STEP) stepSize = -MAX_VOLT_STEP;
-        else if (stepSize == 0) stepSize = 0.000000001;
-
-        // Update voltage target for arrays
-        targetVoltage += stepSize;
+        //use PID loop and update
         for (int i = 0; i < NUM_ARRAYS; i++) {
-            setVoltOut(i, targetVoltage);
+            //set the target current for the current PID loop to the charge current limit
+            arrayPins[i].currentController.setSetPoint(packChargeCurrentLimit);
+            //set the process value to the current from the array
+            arrayPins[i].currentController.setProcessValue(arrayData[i].current);
+            //update the PWM duty cycle
+            arrayPins[i].pwmPin.write(arrayPins[i].currentController.compute());
         }
-        
         return;
     }
    

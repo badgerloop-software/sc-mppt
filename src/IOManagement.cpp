@@ -6,13 +6,15 @@ struct ArrayPins {
     AnalogInMutexless voltPin;
     INA281Driver currPin;
     PID pidController;
+    PID currentController;
     FastPWM pwmPin;
 };
 
 ArrayPins arrayPins[NUM_ARRAYS] = {
-    {AnalogInMutexless(VOLT_PIN_1), INA281Driver(CURR_PIN_1, 0.01), PID(P_TERM, I_TERM, D_TERM, (float)IO_UPDATE_PERIOD.count() / 1000), FastPWM(PWM_OUT_1)},
-    {AnalogInMutexless(VOLT_PIN_2), INA281Driver(CURR_PIN_2, 0.01), PID(P_TERM, I_TERM, D_TERM, (float)IO_UPDATE_PERIOD.count() / 1000), FastPWM(PWM_OUT_2)},
-    {AnalogInMutexless(VOLT_PIN_3), INA281Driver(CURR_PIN_3, 0.1), PID(P_TERM, I_TERM, D_TERM, (float)IO_UPDATE_PERIOD.count() / 1000), FastPWM(PWM_OUT_3)}
+    {AnalogInMutexless(VOLT_PIN_1), INA281Driver(CURR_PIN_1, 0.01), PID(P_TERM, I_TERM, D_TERM, (float)IO_UPDATE_PERIOD.count() / 1000), PID(P_curr_term, I_curr_term, D_curr_term, (float)IO_UPDATE_PERIOD.count() / 1000), FastPWM(PWM_OUT_1)},
+    {AnalogInMutexless(VOLT_PIN_2), INA281Driver(CURR_PIN_2, 0.01), PID(P_TERM, I_TERM, D_TERM, (float)IO_UPDATE_PERIOD.count() / 1000), PID(P_curr_term, I_curr_term, D_curr_term, (float)IO_UPDATE_PERIOD.count() / 1000), FastPWM(PWM_OUT_2)},
+    {AnalogInMutexless(VOLT_PIN_3), INA281Driver(CURR_PIN_3, 0.01), PID(P_TERM, I_TERM, D_TERM, (float)IO_UPDATE_PERIOD.count() / 1000), PID(P_curr_term, I_curr_term, D_curr_term, (float)IO_UPDATE_PERIOD.count() / 1000), FastPWM(PWM_OUT_3)}
+    
 };
 
 volatile ArrayData arrayData[NUM_ARRAYS];
@@ -94,6 +96,12 @@ void initData(std::chrono::microseconds updatePeriod) {
         arrayPins[i].pidController.setMode(AUTO_MODE);
         arrayPins[i].pidController.setSetPoint(INIT_VOLT);
 
+        arrayPins[i].currentController.setInputLimits(PID_IN_MIN, PID_IN_MAX);
+        arrayPins[i].currentController.setOutputLimits(PWM_DUTY_MIN, PWM_DUTY_MAX);
+        arrayPins[i].currentController.setMode(AUTO_MODE);
+        arrayPins[i].currentController.setSetPoint(packChargeCurrentLimit);
+
+
         arrayPins[i].pwmPin.period_us(PWM_PERIOD_US);
     }
 }
@@ -102,6 +110,10 @@ void initData(std::chrono::microseconds updatePeriod) {
 void setVoltOut(uint8_t arrayNumber, float voltage) {
     if (voltage > V_TARGET_MAX) voltage = V_TARGET_MAX;
     arrayPins[arrayNumber].pidController.setSetPoint(voltage);
+}
+void setCurrentOut(uint8_t arrayNumber, float current) {
+    if (current > I_TARGET_MAX) current = I_TARGET_MAX;
+    arrayPins[arrayNumber].currentController.setSetPoint(current);
 }
 
 void setOVFaultReset(uint8_t value) {
