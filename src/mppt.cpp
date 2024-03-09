@@ -8,23 +8,7 @@ void mpptUpdate() {
     // Tracks last power
     static float oldPower = 0.0;
     static float stepSize = INIT_VOLT_STEP;
-    static float targetVoltage = INIT_VOLT;
-
-    // Constant current mode
-    if (chargeMode == ChargeMode::CONST_CURR) {
-        //use PID loop and update
-        for (int i = 0; i < NUM_ARRAYS; i++) {
-            //set the target current for the current PID loop to the charge current limit
-            arrayPins[i].currentController.setSetPoint(packChargeCurrentLimit);
-            //set the process value to the current from the array
-            arrayPins[i].currentController.setProcessValue(arrayData[i].current);
-            //update the PWM duty cycle
-            arrayPins[i].pwmPin.write(arrayPins[i].currentController.compute());
-        }
-        return;
-    }
-   
-    
+    static float targetVoltage = INIT_VOLT;   
     // MPPT PO Mode
     // Get total power from arrays
     float curPower = 0.0;

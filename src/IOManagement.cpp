@@ -55,6 +55,7 @@ Ticker dataUpdater;
 void updateData() {
     lastCurrent = totalCurrent;
     totalCurrent = 0;
+    float totalInputPower = 0;
     for (int i = 0; i < NUM_ARRAYS; i++) {
         // Update temperature mux selection at start for time to update, then read at end
         // Inputs corresponds to bits 0 and 1 of array number
@@ -67,15 +68,31 @@ void updateData() {
         arrayData[i].temp = thermPin.get_temperature();
 
         // Output duty cycle update, shut off if over threshold
-        if (arrayData[i].voltage > V_MAX) {
+      
+        totalInputPower+= arrayData[i].curPower;
+        totalCurrent += arrayData[i].current;
+    }
+
+    float outputCurr= totalInputPower / battVolt;
+    if(chargeMode ==ChargeMode:CONST_CURR){
+        for (int i = 0; i < NUM_ARRAYS; i++) {
+            arrayPins[i].currentController.setSetPoint(outputCurr);
+            arrayPins[i].currentController.setProcessValue(arrayData[i].current);
+            arrayPins[i].pwmPin.write(arrayPins[i].currentController.compute());
+        }
+    }
+    else{
+        for (int i = 0; i < NUM_ARRAYS; i++) {
+             if (arrayData[i].voltage > V_MAX) {
             arrayPins[i].pwmPin.write(0);
         } else {
             arrayPins[i].pidController.setProcessValue(arrayData[i].voltage);
             arrayPins[i].pwmPin.write(arrayPins[i].pidController.compute());
         }
-
-        totalCurrent += arrayData[i].current;
+        }
     }
+     
+
 
     boostEnabled = boost_en.read();
     battVolt = batteryVoltIn.read() * BATT_V_SCALE;
@@ -112,7 +129,6 @@ void setVoltOut(uint8_t arrayNumber, float voltage) {
     arrayPins[arrayNumber].pidController.setSetPoint(voltage);
 }
 void setCurrentOut(uint8_t arrayNumber, float current) {
-    if (current > I_TARGET_MAX) current = I_TARGET_MAX;
     arrayPins[arrayNumber].currentController.setSetPoint(current);
 }
 
