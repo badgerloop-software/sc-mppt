@@ -76,7 +76,7 @@ void updateData() {
     float outputCurr= totalInputPower / battVolt;
     if(chargeMode ==ChargeMode:CONST_CURR){
         for (int i = 0; i < NUM_ARRAYS; i++) {
-            arrayPins[i].currentController.setSetPoint(outputCurr);
+           // arrayPins[i].currentController.setSetPoint(outputCurr);
             arrayPins[i].currentController.setProcessValue(arrayData[i].current);
             arrayPins[i].pwmPin.write(arrayPins[i].currentController.compute());
         }

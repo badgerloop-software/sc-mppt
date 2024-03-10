@@ -8,7 +8,22 @@ void mpptUpdate() {
     // Tracks last power
     static float oldPower = 0.0;
     static float stepSize = INIT_VOLT_STEP;
-    static float targetVoltage = INIT_VOLT;   
+    static float targetVoltage = INIT_VOLT;  
+    if(chargeMode == ChargeMode::CONST_CURR) {
+        //update ONLY setpoint for current controller
+        float totalInputPower = 0;
+        float totalCurrent = 0;
+        for (int i = 0; i < NUM_ARRAYS; i++) {
+            totalInputPower += arrayData[i].curPower;
+            totalCurrent += arrayData[i].current;
+        }
+
+        float outputCurr = totalInputPower / battVolt;
+        for (int i = 0; i < NUM_ARRAYS; i++) {
+            arrayPins[i].currentController.setSetPoint(outputCurr);
+        }
+        
+    }
     // MPPT PO Mode
     // Get total power from arrays
     float curPower = 0.0;
