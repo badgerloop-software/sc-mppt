@@ -22,6 +22,7 @@ void mpptUpdate() {
         for (int i = 0; i < NUM_ARRAYS; i++) {
             setCurrentOut(i, outputCurr);
         }
+        return;
         
     }
     // MPPT PO Mode
