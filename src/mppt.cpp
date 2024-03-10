@@ -20,7 +20,7 @@ void mpptUpdate() {
 
         float outputCurr = totalInputPower / battVolt;
         for (int i = 0; i < NUM_ARRAYS; i++) {
-            arrayPins[i].currentController.setSetPoint(outputCurr);
+            setCurrentOut(i, outputCurr);
         }
         
     }
