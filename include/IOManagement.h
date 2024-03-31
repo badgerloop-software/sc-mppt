@@ -43,7 +43,14 @@ void initData(std::chrono::microseconds updatePeriod);
 
 // Sets voltage output for specified array
 // Value will be capped if outside V_MIN or V_MAX specified in const.h
-void setVoltOut(uint8_t arrayNumber, float voltage);
+void setVoltOut(float voltage);
+
+// Sets target output current for all strings
+void setCurrentOut(float current);
+
+// Does PID loop iteration with the provided feedback value
+// Returns new target voltage from PID
+float updateCurrentOut(float feedbackCurrent);
 
 // Sets clearing of OV fault
 void setOVFaultReset(uint8_t value);
