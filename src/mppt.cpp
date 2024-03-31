@@ -8,39 +8,23 @@ void mpptUpdate() {
     // Tracks last power
     static float oldPower = 0.0;
     static float stepSize = INIT_VOLT_STEP;
-    static float targetVoltage = INIT_VOLT;
-
-    // Constant current mode
-    if (chargeMode == ChargeMode::CONST_CURR) {
-        if (totalCurrent > CONST_CURR_THRESH) { // above threshold
-            if (totalCurrent > lastCurrent) { // current is increasing, switch direction
-                stepSize *= -0.8;
-            } else { // current is decreasing, keep going
-                stepSize *= 1.4;
-            }
-        } else { // below threshold
-            if (totalCurrent > lastCurrent) { // current is increasing, keep going
-                stepSize *= 1.4;
-            } else { // current is decreasing, switch direction
-                stepSize *= -0.8;
-            }
-        }
-
-        // Make sure step size not too large, do not allow 0
-        if (stepSize > MAX_VOLT_STEP) stepSize = MAX_VOLT_STEP;
-        else if (stepSize < -MAX_VOLT_STEP) stepSize = -MAX_VOLT_STEP;
-        else if (stepSize == 0) stepSize = 0.000000001;
-
-        // Update voltage target for arrays
-        targetVoltage += stepSize;
+    static float targetVoltage = INIT_VOLT;  
+    if(chargeMode == ChargeMode::CONST_CURR) {
+        //update ONLY setpoint for current controller
+        float totalInputPower = 0;
+        float totalCurrent = 0;
         for (int i = 0; i < NUM_ARRAYS; i++) {
-            setVoltOut(i, targetVoltage);
+            totalInputPower += arrayData[i].curPower;
+            totalCurrent += arrayData[i].current;
         }
-        
+
+        float outputCurr = totalInputPower / battVolt;
+        for (int i = 0; i < NUM_ARRAYS; i++) {
+            setCurrentOut(i, outputCurr);
+        }
         return;
+        
     }
-   
-    
     // MPPT PO Mode
     // Get total power from arrays
     float curPower = 0.0;
