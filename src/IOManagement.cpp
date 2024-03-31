@@ -84,7 +84,6 @@ void updateData() {
     else if (totalCurrent < MPPT_THRESH) chargeMode = ChargeMode::MPPT;
 }
 
-
 void initData(std::chrono::microseconds updatePeriod) {
     // Auto updating IO
     dataUpdater.attach(updateData, updatePeriod);
@@ -126,7 +125,12 @@ void setOVFaultReset(uint8_t value) {
     OVFaultReset.write(value);
 }
 
-
 void setCapDischarge(uint8_t value) {
     capDischarge.write(value);
+}
+
+void benchmarkUpdatePWM(float pwm_value) {
+    arrayPins[0].pwmPin.write(pwm_value);
+    arrayPins[1].pwmPin.write(pwm_value);
+    arrayPins[2].pwmPin.write(pwm_value);
 }

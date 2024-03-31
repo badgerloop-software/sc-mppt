@@ -40,6 +40,8 @@ extern volatile float lastCurrent;
 // New input data will automatically be written to arrayData
 void initData(std::chrono::microseconds updatePeriod);
 
+// used to manually update PWM outputs for each array.
+void benchmarkUpdatePWM(float pwm_value);
 
 // Sets voltage output for specified array
 // Value will be capped if outside V_MIN or V_MAX specified in const.h
@@ -51,6 +53,8 @@ void setCurrentOut(float current);
 // Does PID loop iteration with the provided feedback value
 // Returns new target voltage from PID
 float updateCurrentOut(float feedbackCurrent);
+
+void setCurrentOut(uint8_t arrayNumber, float current);
 
 // Sets clearing of OV fault
 void setOVFaultReset(uint8_t value);
