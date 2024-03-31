@@ -8,23 +8,20 @@ void mpptUpdate() {
     // Tracks last power
     static float oldPower = 0.0;
     static float stepSize = INIT_VOLT_STEP;
-    static float targetVoltage = INIT_VOLT;  
-    if(chargeMode == ChargeMode::CONST_CURR) {
-        //update ONLY setpoint for current controller
+    static float targetVoltage = INIT_VOLT;
+
+    if (chargeMode == ChargeMode::CONST_CURR) {
+        // update ONLY setpoint for current controller
         float totalInputPower = 0;
-        float totalCurrent = 0;
         for (int i = 0; i < NUM_ARRAYS; i++) {
             totalInputPower += arrayData[i].curPower;
-            totalCurrent += arrayData[i].current;
         }
-
         float outputCurr = totalInputPower / battVolt;
-        for (int i = 0; i < NUM_ARRAYS; i++) {
-            setCurrentOut(i, outputCurr);
-        }
+        float targetVoltage = updateCurrentOut(outputCurr);
+        setVoltOut(targetVoltage);
         return;
-        
     }
+
     // MPPT PO Mode
     // Get total power from arrays
     float curPower = 0.0;
@@ -46,9 +43,7 @@ void mpptUpdate() {
 
     // Update voltage target for arrays
     targetVoltage += stepSize;
-    for (int i = 0; i < NUM_ARRAYS; i++) {
-        setVoltOut(i, targetVoltage);
-    }
+    setVoltOut(targetVoltage);
 
     // Update power for next cycle
     oldPower = curPower;
