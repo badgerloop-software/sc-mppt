@@ -44,7 +44,6 @@ volatile float packChargeCurrentLimit = 0;
 
 // Current storage
 volatile float totalCurrent = 0;
-volatile float lastCurrent = 0;
 
 // Charging algorithm mode
 volatile ChargeMode chargeMode = ChargeMode::MPPT;
@@ -55,6 +54,8 @@ Ticker dataUpdater;
 
 // Updates arrayData with new input values and PWM outputs based on PID loop
 void updateData() {
+    totalCurrent = 0;
+
     for (int i = 0; i < NUM_ARRAYS; i++) {
         // Update temperature mux selection at start for time to update, then read at end
         // Inputs corresponds to bits 0 and 1 of array number
@@ -65,6 +66,8 @@ void updateData() {
         arrayData[i].curPower = arrayData[i].voltage * arrayData[i].current;
         arrayData[i].dutyCycle = arrayPins[i].pwmPin.read();
         arrayData[i].temp = thermPin.get_temperature();
+
+        totalCurrent += arrayData[i].current;
     }
 
     for (int i = 0; i < NUM_ARRAYS; i++) {
@@ -125,7 +128,6 @@ float updateCurrentOut(float feedbackCurrent) {
 void setOVFaultReset(uint8_t value) {
     OVFaultReset.write(value);
 }
-
 
 void setCapDischarge(uint8_t value) {
     capDischarge.write(value);
