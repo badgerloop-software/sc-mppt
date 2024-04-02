@@ -19,7 +19,7 @@ ArrayPins arrayPins[NUM_ARRAYS] = {
 volatile ArrayData arrayData[NUM_ARRAYS];
 
 // PID for constant current
-PID constCurrPID(P_curr_term, I_curr_term, D_curr_term, (float)IO_UPDATE_PERIOD.count() / 1000);
+PID constCurrPID(P_curr_term, I_curr_term, D_curr_term, (float)MPPT_UPDATE_PERIOD.count() / 1000);
 
 // Enables PWM-Voltage converters
 DigitalIn boost_en(PB_7);
