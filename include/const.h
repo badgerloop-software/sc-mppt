@@ -69,6 +69,7 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 
 //Maximum current the algo loop can target would be the pack charge current limit
 #define I_TARGET_MAX 20
+
 // Frequency of MPPT algo updates
 #define MPPT_UPDATE_PERIOD 500ms
 
