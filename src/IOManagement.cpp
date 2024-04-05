@@ -67,16 +67,6 @@ void updateData() {
         arrayData[i].temp = thermPin.get_temperature();
     }
 
-    for (int i = 0; i < NUM_ARRAYS; i++) {
-        if (arrayData[i].voltage > V_MAX) {
-            arrayPins[i].pwmPin.write(0);
-        
-        } else {
-            arrayPins[i].pidController.setProcessValue(arrayData[i].voltage);
-            arrayPins[i].pwmPin.write(arrayPins[i].pidController.compute());
-        }
-    }
-
     boostEnabled = boost_en.read();
     battVolt = batteryVoltIn.read() * BATT_V_SCALE;
 
