@@ -53,7 +53,7 @@ void setCurrentOut(float current);
 float updateCurrentOut(float feedbackCurrent);
 
 // Sets clearing of OV fault
-void setOVFaultReset(uint8_t value);
+void clearOVFaultReset(uint8_t value);
 
 // Controls discharging of output capacitors thorugh resistor path
 void setCapDischarge(uint8_t value);

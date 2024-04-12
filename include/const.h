@@ -93,4 +93,7 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 #define CAN_RX PA_11
 #define CAN_TX PA_12
 
+// Duration undervoltage fault reset asserted on command 
+#define OV_FAULT_RST_PERIOD 250ms
+
 #endif // CONST_H
