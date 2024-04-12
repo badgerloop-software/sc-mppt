@@ -36,6 +36,7 @@ Thermistor thermPin(NCP21XM472J03RA_Constants, PA_0, 10000);
 
 
 // Misc controlled outputs. Default to nominal state
+Timeout ovFaultResetDelayer; 
 DigitalOut OVFaultReset(OV_FAULT_RST_PIN, 0);
 DigitalOut capDischarge(DISCHARGE_CAPS_PIN, 1);
 
@@ -125,8 +126,13 @@ float updateCurrentOut(float feedbackCurrent) {
     return constCurrPID.compute();
 }
 
-void setOVFaultReset(uint8_t value) {
+void completeOVFaultReset() {
+    OVFaultReset.write(0);
+}
+
+void clearOVFaultReset(uint8_t value) {
     OVFaultReset.write(value);
+    ovFaultResetDelayer.attach(&completeOVFaultReset, OV_FAULT_RST_PERIOD);
 }
 
 void setCapDischarge(uint8_t value) {
