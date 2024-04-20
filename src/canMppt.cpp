@@ -6,10 +6,10 @@ CANMPPT::CANMPPT(PinName rd, PinName td, int frequency) : CANManager(rd, td, fre
 void CANMPPT::readHandler(int messageID, SharedPtr<unsigned char> data, int length) {
     switch (messageID) {
         case 0x050:
-            clearOVFaultReset(*data);
+            setCapDischarge(*data);
             break;
         case 0x051:
-            setCapDischarge(*data);
+            clearOVFaultReset(*data);
             break;
         case 0x103:
             packChargeCurrentLimit = (float)(*(uint16_t*)data.get()) * CONST_CURR_SAFETY_MULT;
