@@ -15,13 +15,23 @@ void debugPrint() {
                 arrayData[i].dutyCycle, arrayData[i].temp);
     }
     printf("Boost enable: %i\nBattery Voltage: %5.2f\n", boostEnabled, battVolt);
+    printf("Mode: %s\n", (bool)chargeMode ? "MPPT" : "Current");
+    // Compute current output current for feedback
+    float totalInputPower = 0;
+    for (int i = 0; i < NUM_ARRAYS; i++) {
+        totalInputPower += arrayData[i].curPower;
+    }
+    float outputCurr = totalInputPower / battVolt;
+    printf("Output Current: %f\n", outputCurr);
 }
 #endif
 
 int main() {
 #if DEBUG_PRINT
     BufferedSerial serial(USBTX, USBRX, 115200);
+    serial.set_blocking(false);
     int counter = 0;
+    char buf[1];
 #endif
 
 
@@ -37,6 +47,12 @@ int main() {
             counter = 0;
         }
         counter++;
+
+        if (serial.read(buf, 1) > 0) {
+            if (buf[0] == 'c') packChargeCurrentLimit = 2;
+            else if (buf[0] == 'm') packChargeCurrentLimit = 80;
+            buf[0] = 0;
+        }
 #endif
 
         canBus.sendMPPTData();
