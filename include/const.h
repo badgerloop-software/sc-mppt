@@ -61,8 +61,9 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 // initial step size for MPPT updates
 #define INIT_VOLT_STEP 0.5
 
-// maximum step size for MPPT updates
-#define MAX_VOLT_STEP 1
+// step size limits for MPPT updates
+#define MIN_VOLT_STEP 0.01
+#define MAX_VOLT_STEP 2
 
 // Maximum voltage the algo loop can target (want safe offset under danger V_MAX)
 #define V_TARGET_MAX 105
