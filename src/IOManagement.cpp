@@ -126,6 +126,10 @@ float updateCurrentOut(float feedbackCurrent) {
     return constCurrPID.compute();
 }
 
+/**
+    On CAN command, holds the OV fault reset low for fixed period of time to simulate
+    manual reset via button press
+*/
 void completeOVFaultReset() {
     OVFaultReset.write(0);
 }
