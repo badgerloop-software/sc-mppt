@@ -12,13 +12,14 @@ void mpptUpdate() {
 
     // Constant current mode. Try to match BMS provided charge current limit via PID loop
     if (chargeMode == ChargeMode::CONST_CURR) {
-        // Compute current output current for feedback
+        // Compute output current for feedback
         float totalInputPower = 0;
         for (int i = 0; i < NUM_ARRAYS; i++) {
             totalInputPower += arrayData[i].curPower;
         }
         float outputCurr = totalInputPower / battVolt;
         
+        // Get new target voltage from PID and update output
         float targetVoltage = updateCurrentOut(outputCurr);
         setVoltOut(targetVoltage);
         return;
