@@ -41,8 +41,8 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 #define P_TERM -0.1
 #define I_TERM -0.1
 #define D_TERM 0
-#define P_curr_term -0.1
-#define I_curr_term -0.1
+#define P_curr_term 0.1
+#define I_curr_term 0.1
 #define D_curr_term 0
 
 // Input range
