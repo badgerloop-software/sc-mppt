@@ -25,6 +25,9 @@ void mpptUpdate() {
     }
 
     // MPPT PO Mode
+    // Update the desired target voltage to reality
+    targetVoltage = arrayData[0].voltage;
+
     // Get total power from arrays
     float curPower = 0.0;
     for (int i = 0; i < NUM_ARRAYS; i++) {

@@ -1,4 +1,5 @@
 #include "IOManagement.h"
+#include <array>
 
 
 // Solar array voltage, current, and PWM pins (controlled by PID) and storage variable
@@ -109,6 +110,11 @@ void initData(std::chrono::microseconds updatePeriod) {
     constCurrPID.setSetPoint(packChargeCurrentLimit);
 }
 
+void resetPID() {
+    for (int i = 0; i < NUM_ARRAYS; i++) {
+        arrayPins[i].pidController.reset();
+    }
+}
 
 void setVoltOut(float voltage) {
     if (voltage > V_TARGET_MAX) voltage = V_TARGET_MAX;
