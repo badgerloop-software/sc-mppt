@@ -45,6 +45,7 @@ int main() {
 #if DEBUG_PRINT
         // Display digital and analog values every second (for testing) 
         if (counter >= (1000 / DATA_SEND_PERIOD.count())) {
+            //printf("%f\n", arrayData[0].voltage);
             debugPrint();
             counter = 0;
         }
@@ -59,5 +60,6 @@ int main() {
 
         canBus.sendMPPTData();
         canBus.runQueue(DATA_SEND_PERIOD);
+        
     }
 }

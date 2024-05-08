@@ -40,6 +40,8 @@ extern volatile float lastCurrent;
 // New input data will automatically be written to arrayData
 void initData(std::chrono::microseconds updatePeriod);
 
+// Resets the duty cycle PID loops
+void resetPID();
 
 // Sets voltage output for specified array
 // Value will be capped if outside V_MIN or V_MAX specified in const.h
