@@ -17,6 +17,7 @@ void debugPrint() {
     printf("Boost enable: %i\nBattery Voltage: %5.2f\n", boostEnabled, battVolt);
     printf("Mode: %s\n", (bool)chargeMode ? "MPPT" : "Current");
     printf("Current Limit: %f\n", packChargeCurrentLimit);
+    printf("Target Voltage: %f\n", targetVoltage);
     // Compute current output current for feedback
     float totalInputPower = 0;
     for (int i = 0; i < NUM_ARRAYS; i++) {
