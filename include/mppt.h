@@ -6,6 +6,7 @@
 #include "const.h"
 #include "IOManagement.h"
 
+extern volatile float targetVoltage;
 
 // Sets up running of MPPT algorithm at specified rate
 void initMPPT(std::chrono::microseconds updatePeriod);

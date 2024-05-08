@@ -2,13 +2,12 @@
 
 
 Ticker mpptUpdater;
-
+volatile float targetVoltage = INIT_VOLT;
 
 void mpptUpdate() {
     // Tracks last power
     static float oldPower = 0.0;
     static float stepSize = INIT_VOLT_STEP;
-    static float targetVoltage = INIT_VOLT;
 
     // Constant current mode. Try to match BMS provided charge current limit via PID loop
     if (chargeMode == ChargeMode::CONST_CURR) {
@@ -46,8 +45,9 @@ void mpptUpdate() {
     else if (stepSize < 0 & stepSize > -MIN_VOLT_STEP) stepSize = -MIN_VOLT_STEP;
     else if (stepSize == 0) stepSize = MIN_VOLT_STEP;
 
-    // Update voltage target for arrays
+    // Update voltage target for arrays. Do not allow negative
     targetVoltage += stepSize;
+    if (targetVoltage <= 0) targetVoltage = 0.01;
     setVoltOut(targetVoltage);
 
     // Update power for next cycle

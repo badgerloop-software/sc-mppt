@@ -38,11 +38,11 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 
 // --------------- PID/PWM CONSTANTS -----------------
 // Loop parameters
-#define P_TERM -0.1
-#define I_TERM -0.1
+#define P_TERM -8
+#define I_TERM 0
 #define D_TERM 0
-#define P_curr_term 0.1
-#define I_curr_term 0.1
+#define P_curr_term -2
+#define I_curr_term 0
 #define D_curr_term 0
 
 // Input range
@@ -63,7 +63,7 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 
 // step size limits for MPPT updates
 #define MIN_VOLT_STEP 0.01
-#define MAX_VOLT_STEP 2
+#define MAX_VOLT_STEP 1
 
 // Maximum voltage the algo loop can target (want safe offset under danger V_MAX)
 #define V_TARGET_MAX 105

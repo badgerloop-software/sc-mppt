@@ -41,7 +41,7 @@ DigitalOut OVFaultReset(OV_FAULT_RST_PIN, 0);
 DigitalOut capDischarge(DISCHARGE_CAPS_PIN, 1);
 
 // Pack charge current limit
-volatile float packChargeCurrentLimit = 0;
+volatile float packChargeCurrentLimit = 3.25;
 
 // Current storage
 volatile float totalCurrent = 0;
