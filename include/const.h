@@ -61,10 +61,6 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 // initial step size for MPPT updates
 #define INIT_VOLT_STEP 0.5
 
-// step size limits for MPPT updates
-#define MIN_VOLT_STEP 0.5
-#define MAX_VOLT_STEP 1
-
 // Maximum voltage the algo loop can target (want safe offset under danger V_MAX)
 #define V_TARGET_MAX 105
 
@@ -72,7 +68,7 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 #define I_TARGET_MAX 20
 
 // Frequency of MPPT algo updates
-#define MPPT_UPDATE_PERIOD 2000ms
+#define MPPT_UPDATE_PERIOD 5 * IO_UPDATE_PERIOD
 
 // Current threshold to switch to constant current
 #define CONST_CURR_THRESH packChargeCurrentLimit
