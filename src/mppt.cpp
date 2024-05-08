@@ -36,18 +36,9 @@ void mpptUpdate() {
 
     // If last step increased power, do bigger step in same direction. Else smaller step opposite direction
     if (curPower < oldPower) {
-        stepSize *= -0.5;
-    } else {
-        stepSize *= 2;
+        stepSize *= -1;
     }
-
-    // Make sure step size not too large, do not allow 0
-    if (stepSize > MAX_VOLT_STEP) stepSize = MAX_VOLT_STEP;
-    else if (stepSize < -MAX_VOLT_STEP) stepSize = -MAX_VOLT_STEP;
-    else if (stepSize > 0 & stepSize < MIN_VOLT_STEP) stepSize = MIN_VOLT_STEP;
-    else if (stepSize < 0 & stepSize > -MIN_VOLT_STEP) stepSize = -MIN_VOLT_STEP;
-    else if (stepSize == 0) stepSize = MIN_VOLT_STEP;
-
+    
     // Update voltage target for arrays. Do not allow negative
     targetVoltage += stepSize;
     if (targetVoltage <= 0) targetVoltage = 0.01;
