@@ -6,7 +6,7 @@
 #include "terminal.h"
 
 
-#if DEBUG_PRINT
+#if DEBUG_PRINT == 1
 void debugPrint() {
     printf("\n");
     for (int i = 0; i < NUM_ARRAYS; i++) {
@@ -26,6 +26,14 @@ void debugPrint() {
     float outputCurr = totalInputPower / battVolt;
     printf("Output Current: %f\n", outputCurr);
 }
+#elif DEBUG_PRINT == 2
+void debugPrint() {
+    printf("%5.2f,%5.2f,%5.2f,%5.2f,%5.2f,%5.2f,%5.2f,%5.2f,%5.2f,%5.2f,%5.2f\n",
+            arrayData[0].voltage, arrayData[0].current,arrayData[0].temp,
+            arrayData[1].voltage, arrayData[1].current,arrayData[1].temp,
+            arrayData[2].voltage, arrayData[2].current,arrayData[2].temp,
+            battVolt, targetVoltage);
+}
 #endif
 
 int main() {
@@ -34,6 +42,9 @@ int main() {
     serial.set_blocking(false);
     int counter = 0;
     char buf[1];
+#endif
+#if DEBUG_PRINT == 2
+    printf("voltage0,current0,temp0,voltage1,current1,temp1,voltage2,current2,temp2,battVolt,targVolt\n");
 #endif
 
 
