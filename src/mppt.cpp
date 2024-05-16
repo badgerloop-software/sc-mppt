@@ -22,7 +22,7 @@ void mpptUpdate() {
 
         // newCurr is farther from Limit than oldCurr
         // so, we should step in opposite direction
-        if (abs(newCurr - packChargeCurrentLimit) < abs(oldCurr - packChargeCurrentLimit)) {
+        if (abs(newCurr - packChargeCurrentLimit) > abs(oldCurr - packChargeCurrentLimit)) {
             stepSize_C *= -1.0;
         }
 
