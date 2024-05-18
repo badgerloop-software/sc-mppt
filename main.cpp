@@ -34,6 +34,13 @@ void debugPrint() {
             arrayData[2].voltage, arrayData[2].current,arrayData[2].temp,
             battVolt, targetVoltage);
 }
+#elif DEBUG_PRINT == 3
+// array 0 printout only
+void debugPrint() {
+    printf("V: %5.2f || I: %5.2f || P: %5.2f || PWM: %5.2f || targetV: %5.2f || BoostEn: %i || battV: %5.2f || Mode: %s || errorV: %5.2f\n",
+            arrayData[0].voltage, arrayData[0].current, arrayData[0].curPower, arrayData[0].dutyCycle,
+            targetVoltage, boostEnabled, battVolt, (bool)chargeMode ? "MPPT" : "Current", targetVoltage - arrayData[0].voltage);
+}
 #endif
 
 int main() {
@@ -51,12 +58,17 @@ int main() {
     initData(IO_UPDATE_PERIOD);
     initMPPT(MPPT_UPDATE_PERIOD);
     CANMPPT canBus(CAN_RX, CAN_TX);
+    bool past_boostenabled = false;
 
     while (true) {
-#if DEBUG_PRINT
+#if DEBUG_PRINT == 3
+    wait_us(100000); // 0.1 sec
+    debugPrint();
+#else 
         // Display digital and analog values every second (for testing) 
-        if (counter >= (1000 / DATA_SEND_PERIOD.count())) {
+        if (counter >= (100 / DATA_SEND_PERIOD.count())) {
             //printf("%f\n", arrayData[0].voltage);
+            printf("\033[2J\033[1;1H");
             debugPrint();
             counter = 0;
         }
@@ -68,9 +80,15 @@ int main() {
             buf[0] = 0;
         }
 #endif
+        if (!past_boostenabled && boostEnabled) {
+            resetPID();
+            printf("resetPID------------------------------------");
+        }
+        past_boostenabled = boostEnabled;
 
-        canBus.sendMPPTData();
-        canBus.runQueue(DATA_SEND_PERIOD);
-        
+
+        // canBus.sendMPPTData();
+        // canBus.runQueue(DATA_SEND_PERIOD);
+       
     }
 }

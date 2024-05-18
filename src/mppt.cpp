@@ -8,6 +8,7 @@ void mpptUpdate() {
     // Tracks last power
     static float oldPower = 0.0;
     static float stepSize = INIT_VOLT_STEP;
+    static bool past_BE = false;
 
     // Constant current mode. Try to match BMS provided charge current limit via PID loop
     if (chargeMode == ChargeMode::CONST_CURR) {
@@ -28,6 +29,14 @@ void mpptUpdate() {
     // Update the desired target voltage to reality
     targetVoltage = arrayData[0].voltage;
 
+    /* FEATURE 1
+    // reset the targetVoltage on boostEnabled rising edge
+    if (!past_BE && boostEnabled) {
+        targetVoltage = 24; // (arrayData[0].voltage + 9) / 2; // start at the middle value since it is closer to MAX
+    }
+    past_BE = boostEnabled;
+    */
+
     // Get total power from arrays
     float curPower = 0.0;
     for (int i = 0; i < NUM_ARRAYS; i++) {
@@ -38,10 +47,27 @@ void mpptUpdate() {
     if (curPower < oldPower) {
         stepSize *= -1;
     }
+
+    /* FEATURE 2
+    // If last step increased power, do bigger step in same direction. Else smaller step opposite direction
+    if (curPower < oldPower) {
+        stepSize *= -0.8;
+    } else {
+        stepSize *= 1.2;
+    }
+
+    // Make sure step size not too large, do not allow 0
+    if (stepSize > MAX_VOLT_STEP) stepSize = MAX_VOLT_STEP;
+    else if (stepSize < -MAX_VOLT_STEP) stepSize = -MAX_VOLT_STEP;
+    else if (stepSize > 0 & stepSize < MIN_VOLT_STEP) stepSize = MIN_VOLT_STEP;
+    else if (stepSize < 0 & stepSize > -MIN_VOLT_STEP) stepSize = -MIN_VOLT_STEP;
+    else if (stepSize == 0) stepSize = MIN_VOLT_STEP;
+    */
     
     // Update voltage target for arrays. Do not allow negative
     targetVoltage += stepSize;
     if (targetVoltage <= 0) targetVoltage = 0.01;
+    // targetVoltage = 14;
     setVoltOut(targetVoltage);
 
     // Update power for next cycle
