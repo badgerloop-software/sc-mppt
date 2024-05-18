@@ -3,7 +3,7 @@
 
 Ticker mpptUpdater;
 volatile float targetVoltage[NUM_ARRAYS] = {INIT_VOLT, INIT_VOLT, INIT_VOLT};
-volatile float targetVoltage_C = INIT_VOLT;
+volatile float targetVoltage_C[NUM_ARRAYS] = {INIT_VOLT, INIT_VOLT, INIT_VOLT};
 
 void mpptUpdate() {
     // Tracks last power
@@ -11,13 +11,26 @@ void mpptUpdate() {
     static float stepSize[NUM_ARRAYS] = {INIT_VOLT_STEP, INIT_VOLT_STEP, INIT_VOLT_STEP};
     static int zeroDutyCounter[NUM_ARRAYS] = {0, 0, 0};
     static int maxDutyCounter[NUM_ARRAYS] = {0, 0, 0};
+    static float stepSize_C[NUM_ARRAYS] = {INIT_VOLT_STEP, INIT_VOLT_STEP, INIT_VOLT_STEP};
 
-    
-    // Constant current mode. Try to match BMS provided charge current limit via PID loop
+    // Constant current mode. Try to match BMS provided charge current limit via peturb and observe
     if (chargeMode == ChargeMode::CONST_CURR) {
-        // Get new target voltage from PID and update output
-        targetVoltage_C = updateCurrentOut(outputCurrent);
-        setVoltOut(targetVoltage_C);
+        bool decreasePower = false;
+        if (outputCurrent >= packChargeCurrentLimit) {
+            decreasePower = true;
+        }
+        for (int i = 0; i < NUM_ARRAYS; i++) {
+            if ( (decreasePower && oldPower[i] < arrayData[i].curPower) // want to decrease power but we've stepped in the wrong direction
+                || (oldPower[i] > arrayData[i].curPower)) { // want to increase power but power has decreased
+                stepSize_C[i] = -1.0;                
+            }
+            // step NOW voltage in desired direction
+            targetVoltage_C[i] = arrayData[0].voltage + stepSize_C[i];
+            if (targetVoltage_C[i] <= 0) targetVoltage_C[i] = 0.01;
+            setArrayVoltOut(targetVoltage_C[i], i);
+
+            oldPower[i] = arrayData[i].curPower;
+        }
         return;
     }
 

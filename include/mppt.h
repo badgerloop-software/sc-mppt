@@ -7,7 +7,7 @@
 #include "IOManagement.h"
 
 extern volatile float targetVoltage[NUM_ARRAYS];
-extern volatile float targetVoltage_C;
+extern volatile float targetVoltage_C[NUM_ARRAYS];
 
 // Sets up running of MPPT algorithm at specified rate
 void initMPPT(std::chrono::microseconds updatePeriod);
