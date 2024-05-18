@@ -37,9 +37,9 @@ void debugPrint() {
 #elif DEBUG_PRINT == 3
 // array 0 printout only
 void debugPrint() {
-    printf("V: %5.2f || I: %5.2f || P: %5.2f || PWM: %5.2f || targetV: %5.2f || BoostEn: %i || battV: %5.2f || Mode: %s || errorV: %5.2f\n",
-            arrayData[0].voltage, arrayData[0].current, arrayData[0].curPower, arrayData[0].dutyCycle,
-            targetVoltage, boostEnabled, battVolt, (bool)chargeMode ? "MPPT" : "Current", targetVoltage - arrayData[0].voltage);
+    printf("V: %5.2f || targetV_C: %5.2f || I: %5.2f || Out_I: %5.2f || P: %5.2f || PWM: %5.2f || targetV: %5.2f || BoostEn: %i || battV: %5.2f || Mode: %s || errorV: %5.2f\n",
+            arrayData[0].voltage, targetVoltage_C, arrayData[0].current, outputCurrent, arrayData[0].curPower, arrayData[0].dutyCycle,
+            targetVoltage[0], boostEnabled, battVolt, (bool)chargeMode ? "MPPT" : "Current", targetVoltage[0] - arrayData[0].voltage);
 }
 #endif
 

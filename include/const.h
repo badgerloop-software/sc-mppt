@@ -38,11 +38,11 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 
 // --------------- PID/PWM CONSTANTS -----------------
 // Loop parameters
-#define P_TERM -2.9 //-3.65 // -2.9
-#define I_TERM -0.1 // -0.06 // -0.1
+#define P_TERM -0.7 //-3.65 // -2.9
+#define I_TERM -0.2 // -0.06 // -0.1
 #define D_TERM 0 //-0.012 // 0
-#define P_curr_term -2
-#define I_curr_term -0
+#define P_curr_term 0.5
+#define I_curr_term 0.1
 #define D_curr_term 0
 
 // Input range
@@ -68,7 +68,7 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 #define I_TARGET_MAX 20
 
 // Frequency of MPPT algo updates
-#define MPPT_UPDATE_PERIOD 5 * IO_UPDATE_PERIOD
+#define MPPT_UPDATE_PERIOD 10 * IO_UPDATE_PERIOD
 
 // Current threshold to switch to constant current
 #define CONST_CURR_THRESH packChargeCurrentLimit
@@ -98,5 +98,9 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 
 #define MAX_VOLT_STEP 4
 #define MIN_VOLT_STEP 0.5
+
+// try moving targetVoltage when PWM is stuck at either limit 
+#define MOVE_VOLTAGE 5
+#define MAX_STUCK_CYCLES 5
 
 #endif // CONST_H

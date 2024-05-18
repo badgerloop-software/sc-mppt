@@ -32,9 +32,8 @@ extern volatile ChargeMode chargeMode;
 // pack charge current limit
 extern volatile float packChargeCurrentLimit;
 
-// total and last current from all solar arrays
-extern volatile float totalCurrent;
-extern volatile float lastCurrent;
+// output current to battery
+extern volatile float outputCurrent;
 
 // Sets up automatic updating of IO at specified period
 // New input data will automatically be written to arrayData
@@ -43,9 +42,15 @@ void initData(std::chrono::microseconds updatePeriod);
 // Resets the duty cycle PID loops
 void resetPID();
 
-// Sets voltage output for specified array
+// Resets duty cycle PID for specified array
+void resetArrayPID(int array);
+
+// Sets voltage output for all arrays
 // Value will be capped if outside V_MIN or V_MAX specified in const.h
 void setVoltOut(float voltage);
+
+// Sets voltage output for specified array
+void setArrayVoltOut(float voltage, int array);
 
 // Sets target output current for all strings
 void setCurrentOut(float current);

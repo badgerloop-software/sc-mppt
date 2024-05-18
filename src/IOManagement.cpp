@@ -45,7 +45,7 @@ DigitalOut capDischarge(DISCHARGE_CAPS_PIN, 1);
 volatile float packChargeCurrentLimit = 10;
 
 // Current storage
-volatile float totalCurrent = 0;
+volatile float outputCurrent = 0;
 
 // Charging algorithm mode
 volatile ChargeMode chargeMode = ChargeMode::MPPT;
@@ -56,7 +56,7 @@ Ticker dataUpdater;
 
 // Updates arrayData with new input values and PWM outputs based on PID loop
 void updateData() {
-    totalCurrent = 0;
+    float totalPower = 0;
 
     for (int i = 0; i < NUM_ARRAYS; i++) {
         // Update temperature mux selection at start for time to update, then read at end
@@ -69,7 +69,7 @@ void updateData() {
         arrayData[i].dutyCycle = arrayPins[i].pwmPin.read();
         arrayData[i].temp = thermPin.get_temperature();
 
-        totalCurrent += arrayData[i].current;
+        totalPower += arrayData[i].curPower;
     }
 
     for (int i = 0; i < NUM_ARRAYS; i++) {
@@ -85,8 +85,9 @@ void updateData() {
     boostEnabled = boost_en.read();
     battVolt = batteryVoltIn.read() * BATT_V_SCALE;
 
-    if (totalCurrent > CONST_CURR_THRESH) chargeMode = ChargeMode::CONST_CURR;
-    else if (totalCurrent < MPPT_THRESH) chargeMode = ChargeMode::MPPT;
+    outputCurrent = totalPower / battVolt;
+    if (outputCurrent > CONST_CURR_THRESH) chargeMode = ChargeMode::CONST_CURR;
+    else if (outputCurrent < MPPT_THRESH) chargeMode = ChargeMode::MPPT;
 }
 
 
@@ -116,11 +117,20 @@ void resetPID() {
     }
 }
 
+void resetArrayPID(int array) {
+    arrayPins[array].pidController.reset();
+}
+
 void setVoltOut(float voltage) {
     if (voltage > V_TARGET_MAX) voltage = V_TARGET_MAX;
     for (int i = 0; i < NUM_ARRAYS; i++) {
         arrayPins[i].pidController.setSetPoint(voltage);
     }
+}
+
+void setArrayVoltOut(float voltage, int array) {
+    if (voltage > V_TARGET_MAX) voltage = V_TARGET_MAX;
+    arrayPins[array].pidController.setSetPoint(voltage);
 }
 
 void setCurrentOut(float current) {
