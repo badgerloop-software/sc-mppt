@@ -38,9 +38,9 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 
 // --------------- PID/PWM CONSTANTS -----------------
 // Loop parameters
-#define P_TERM -3.65
-#define I_TERM -0.06
-#define D_TERM -0.012
+#define P_TERM -2.9 //-3.65 // -2.9
+#define I_TERM -0.1 // -0.06 // -0.1
+#define D_TERM 0 //-0.012 // 0
 #define P_curr_term -2
 #define I_curr_term -0
 #define D_curr_term 0
@@ -83,7 +83,8 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 // when microcontroller outputting via serial 
 // 1 for human readable mode
 // 2 for logging/csv mode
-#define DEBUG_PRINT 1
+// 3 for showing array 0 values only
+#define DEBUG_PRINT 3
 
 // How fast to transmit data over CAN (and debug prints if on)
 #define DATA_SEND_PERIOD 50ms
@@ -94,5 +95,8 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 
 // Duration undervoltage fault reset asserted on command 
 #define OV_FAULT_RST_PERIOD 250ms
+
+#define MAX_VOLT_STEP 4
+#define MIN_VOLT_STEP 0.5
 
 #endif // CONST_H
