@@ -22,7 +22,7 @@ void mpptUpdate() {
         for (int i = 0; i < NUM_ARRAYS; i++) {
             if ( (decreasePower && oldPower[i] < arrayData[i].curPower) // want to decrease power but we've stepped in the wrong direction
                 || (oldPower[i] > arrayData[i].curPower)) { // want to increase power but power has decreased
-                stepSize_C[i] = -1.0;                
+                stepSize_C[i] *= -1;                
             }
             // step NOW voltage in desired direction
             targetVoltage_C[i] = arrayData[0].voltage + stepSize_C[i];
@@ -36,7 +36,7 @@ void mpptUpdate() {
 
     // control each array separately
     for (int i = 0; i < NUM_ARRAYS; i++) {
-        // MPPT PO Mode
+        // MPPT P&O Mode
         // Update the desired target voltage to reality
         targetVoltage[i] = arrayData[i].voltage;
 
