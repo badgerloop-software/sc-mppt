@@ -87,8 +87,8 @@ int main() {
         past_boostenabled = boostEnabled;
 
 
-        // canBus.sendMPPTData();
-        // canBus.runQueue(DATA_SEND_PERIOD);
+        canBus.sendMPPTData();
+        canBus.runQueue(DATA_SEND_PERIOD);
        
     }
 }

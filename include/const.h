@@ -74,7 +74,7 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 #define CONST_CURR_THRESH packChargeCurrentLimit
 
 // Current threshold to switch to MPPT
-#define MPPT_THRESH packChargeCurrentLimit-1
+#define MPPT_THRESH packChargeCurrentLimit-0.7
 
 #define CONST_CURR_SAFETY_MULT 0.9
 
