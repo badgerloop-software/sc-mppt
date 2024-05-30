@@ -43,6 +43,7 @@ DigitalOut capDischarge(DISCHARGE_CAPS_PIN, 1);
 
 // Pack charge current limit
 volatile float packChargeCurrentLimit = 10;
+volatile float packCurrent = 0; 
 
 // Current storage
 volatile float outputCurrent = 0;
@@ -85,9 +86,10 @@ void updateData() {
     boostEnabled = boost_en.read();
     battVolt = batteryVoltIn.read() * BATT_V_SCALE;
 
-    outputCurrent = totalPower / battVolt;
-    if (outputCurrent > CONST_CURR_THRESH) chargeMode = ChargeMode::CONST_CURR;
-    else if (outputCurrent < MPPT_THRESH) chargeMode = ChargeMode::MPPT;
+    outputCurrent = totalPower / battVolt; // only used in debug printouts now.
+
+    if (packCurrent > CONST_CURR_THRESH) chargeMode = ChargeMode::CONST_CURR;
+    else if (packCurrent < MPPT_THRESH) chargeMode = ChargeMode::MPPT;
 }
 
 
