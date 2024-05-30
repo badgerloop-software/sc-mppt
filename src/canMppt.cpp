@@ -11,9 +11,12 @@ void CANMPPT::readHandler(int messageID, SharedPtr<unsigned char> data, int leng
         case 0x051:
             clearOVFaultReset(*data);
             break;
+        case 0x101:
+            packCurrent = ((data.get()[0] << 8) + data.get()[1]) * 0.1;
+            break;
         case 0x103:
             packChargeCurrentLimit = (float)(*(uint16_t*)data.get()) * CONST_CURR_SAFETY_MULT;
-            setCurrentOut(packChargeCurrentLimit);
+            setCurrentOut(packChargeCurrentLimit); // PID implementation
             break;
         default:
             break;

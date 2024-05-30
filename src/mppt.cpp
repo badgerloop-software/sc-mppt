@@ -16,7 +16,7 @@ void mpptUpdate() {
     // Constant current mode. Try to match BMS provided charge current limit via peturb and observe
     if (chargeMode == ChargeMode::CONST_CURR) {
         bool decreasePower = false;
-        if (outputCurrent >= packChargeCurrentLimit) {
+        if (packCurrent >= packChargeCurrentLimit) {
             decreasePower = true;
         }
         for (int i = 0; i < NUM_ARRAYS; i++) {

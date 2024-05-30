@@ -32,6 +32,9 @@ extern volatile ChargeMode chargeMode;
 // pack charge current limit
 extern volatile float packChargeCurrentLimit;
 
+// net pack current (solar panel IN - motor OUT)
+extern volatile float packCurrent;
+
 // output current to battery
 extern volatile float outputCurrent;
 
