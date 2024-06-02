@@ -19,9 +19,6 @@ ArrayPins arrayPins[NUM_ARRAYS] = {
 
 volatile ArrayData arrayData[NUM_ARRAYS];
 
-// PID for constant current
-PID constCurrPID(P_curr_term, I_curr_term, D_curr_term, (float)MPPT_UPDATE_PERIOD.count() / 1000);
-
 // Enables PWM-Voltage converters
 DigitalIn boost_en(PB_7);
 volatile bool boostEnabled;
@@ -106,11 +103,6 @@ void initData(std::chrono::microseconds updatePeriod) {
 
         arrayPins[i].pwmPin.period_us(PWM_PERIOD_US);
     }
-
-    constCurrPID.setInputLimits(PID_IN_MIN, PID_IN_MAX);
-    constCurrPID.setOutputLimits(0, V_TARGET_MAX);
-    constCurrPID.setMode(AUTO_MODE);
-    constCurrPID.setSetPoint(packChargeCurrentLimit);
 }
 
 void resetPID() {
@@ -133,15 +125,6 @@ void setVoltOut(float voltage) {
 void setArrayVoltOut(float voltage, int array) {
     if (voltage > V_TARGET_MAX) voltage = V_TARGET_MAX;
     arrayPins[array].pidController.setSetPoint(voltage);
-}
-
-void setCurrentOut(float current) {
-    constCurrPID.setSetPoint(current);
-}
-
-float updateCurrentOut(float feedbackCurrent) {
-    constCurrPID.setProcessValue(feedbackCurrent);
-    return constCurrPID.compute();
 }
 
 /**

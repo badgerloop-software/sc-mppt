@@ -41,9 +41,6 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 #define P_TERM -0.7 //-3.65 // -2.9
 #define I_TERM -0.2 // -0.06 // -0.1
 #define D_TERM 0 //-0.012 // 0
-#define P_curr_term 0.5
-#define I_curr_term 0.1
-#define D_curr_term 0
 
 // Input range
 #define PID_IN_MIN 0
@@ -78,6 +75,14 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 
 #define CONST_CURR_SAFETY_MULT 0.9
 
+// used for variable step size
+#define MAX_VOLT_STEP 4
+#define MIN_VOLT_STEP 0.5
+
+// try moving targetVoltage when PWM is stuck at either limit 
+#define MOVE_VOLTAGE 5
+#define MAX_STUCK_CYCLES 5
+
 // ------------- TESTING/OTHER CONSTANTS -------------
 // Whether to log data and steps in file. Should only be enabled
 // when microcontroller outputting via serial 
@@ -96,11 +101,6 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 // Duration undervoltage fault reset asserted on command 
 #define OV_FAULT_RST_PERIOD 250ms
 
-#define MAX_VOLT_STEP 4
-#define MIN_VOLT_STEP 0.5
 
-// try moving targetVoltage when PWM is stuck at either limit 
-#define MOVE_VOLTAGE 5
-#define MAX_STUCK_CYCLES 5
 
 #endif // CONST_H

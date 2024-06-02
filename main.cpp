@@ -8,7 +8,7 @@
 
 #if DEBUG_PRINT == 1
 void debugPrint() {
-    printf("\n");
+    printf("\033[2J\033[1;1H");
     for (int i = 0; i < NUM_ARRAYS; i++) {
         printf("Array %i\nVoltage %5.2fV\t\tCurrent %5.2fA\nPower %5.2fW\t\tDuty Cycle %.4f\nTemp %.4f\n", 
                 i+1, arrayData[i].voltage, arrayData[i].current, arrayData[i].curPower, 
@@ -64,11 +64,9 @@ int main() {
 #if DEBUG_PRINT == 3
     wait_us(100000); // 0.1 sec
     debugPrint();
-#else 
+#elif DEBUG_PRINT == 1
         // Display digital and analog values every second (for testing) 
         if (counter >= (100 / DATA_SEND_PERIOD.count())) {
-            //printf("%f\n", arrayData[0].voltage);
-            printf("\033[2J\033[1;1H");
             debugPrint();
             counter = 0;
         }
@@ -82,7 +80,6 @@ int main() {
 #endif
         if (!past_boostenabled && boostEnabled) {
             resetPID();
-            printf("resetPID------------------------------------");
         }
         past_boostenabled = boostEnabled;
 

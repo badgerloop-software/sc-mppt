@@ -15,10 +15,7 @@ void mpptUpdate() {
 
     // Constant current mode. Try to match BMS provided charge current limit via peturb and observe
     if (chargeMode == ChargeMode::CONST_CURR) {
-        bool decreasePower = false;
-        if (packCurrent >= packChargeCurrentLimit) {
-            decreasePower = true;
-        }
+        bool decreasePower = (packCurrent >= packChargeCurrentLimit);
         for (int i = 0; i < NUM_ARRAYS; i++) {
             if ( (decreasePower && oldPower[i] < arrayData[i].curPower) // want to decrease power but we've stepped in the wrong direction
                 || (oldPower[i] > arrayData[i].curPower)) { // want to increase power but power has decreased
@@ -42,7 +39,7 @@ void mpptUpdate() {
 
         // consecutive cycles of 0 DUTY means we try bigger step in lower voltage
         // don't want to get stuck at 0 DUTY since it is usually not MAX POWER
-        if (arrayData[i].dutyCycle < 0.01) {
+        if (arrayData[i].dutyCycle < (PWM_DUTY_MIN + 0.01)) {
             zeroDutyCounter[i]++;
             if (zeroDutyCounter[i] > MAX_STUCK_CYCLES) {
                 zeroDutyCounter[i] = 0;
@@ -54,7 +51,7 @@ void mpptUpdate() {
         }
 
         // consecutive cycles of 0.8 DUTY
-        if (arrayData[i].dutyCycle > 0.79) {
+        if (arrayData[i].dutyCycle > (PWM_DUTY_MAX - 0.01)) {
             maxDutyCounter[i]++;
             if (maxDutyCounter[i] > MAX_STUCK_CYCLES) {
                 maxDutyCounter[i] = 0;
@@ -71,7 +68,7 @@ void mpptUpdate() {
         }
         
 
-        /* FEATURE 2
+        /* UNTESTED FEATURE: variable step size
         // If last step increased power, do bigger step in same direction. Else smaller step opposite direction
         if (curPower < oldPower) {
             stepSize *= -0.8;
@@ -90,7 +87,6 @@ void mpptUpdate() {
         // Update voltage target for arrays. Do not allow negative
         targetVoltage[i] += stepSize[i];
         if (targetVoltage[i] <= 0) targetVoltage[i] = 0.01;
-        // targetVoltage = 14; // FEATURE: uncomment for constant voltage tests for Voltage PID
         setArrayVoltOut(targetVoltage[i], i);
 
         // Update power for next cycle
