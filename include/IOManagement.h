@@ -12,7 +12,7 @@
 
 // Solar array and battery data
 typedef struct ArrayData {
-    double dutyCycle = INIT_VOLT;
+    double dutyCycle = 0;
     float voltage = 0;
     float current = 0;
     float curPower = 0;
@@ -54,13 +54,6 @@ void setVoltOut(float voltage);
 
 // Sets voltage output for specified array
 void setArrayVoltOut(float voltage, int array);
-
-// Sets target output current for all strings
-void setCurrentOut(float current);
-
-// Does PID loop iteration with the provided feedback value
-// Returns new target voltage from PID
-float updateCurrentOut(float feedbackCurrent);
 
 // Sets clearing of OV fault
 void clearOVFaultReset(uint8_t value);
