@@ -1,4 +1,5 @@
 #include "canMppt.h"
+#include "mppt.h"
 
 
 CANMPPT::CANMPPT(PinName rd, PinName td, int frequency) : CANManager(rd, td, frequency) {};
@@ -23,11 +24,18 @@ void CANMPPT::readHandler(int messageID, SharedPtr<unsigned char> data, int leng
 }
 
 void CANMPPT::sendMPPTData() {
-    this->sendMessage(0x400, (void*)&chargeMode, sizeof(ChargeMode));
+    this->sendMessage(0x400, (void*)&boostEnabled, sizeof(boostEnabled));
+    this->sendMessage(0x401, (void*)&chargeMode, sizeof(ChargeMode));
     // For each array, offset by 3*i since sending 3 fields voltage, current, temperature
     for (int i = 0; i < NUM_ARRAYS; i++) {
-        this->sendMessage(0x401 + 3*i, (void*)&(arrayData[i].voltage), sizeof(float));
-        this->sendMessage(0x402 + 3*i, (void*)&(arrayData[i].current), sizeof(float));
-        this->sendMessage(0x403 + 3*i, (void*)&(arrayData[i].temp), sizeof(float)); // Placeholder until temp reading implemented
+        this->sendMessage(0x402 + 5*i, (void*)&(arrayData[i].voltage), sizeof(float));
+        this->sendMessage(0x403 + 5*i, (void*)&(arrayData[i].current), sizeof(float));
+        this->sendMessage(0x404 + 5*i, (void*)&(arrayData[i].temp), sizeof(float));
+        this->sendMessage(0x405 + 5*i, (void*)&(arrayData[i].dutyCycle), sizeof(float));
+        if (chargeMode == ChargeMode::MPPT) {
+            this->sendMessage(0x406 + 5*i, (void*)&(targetVoltage[i]), sizeof(float));
+        } else {
+            this->sendMessage(0x406 + 5*i, (void*)&(targetVoltage_C[i]), sizeof(float));
+        }
     }
 }
