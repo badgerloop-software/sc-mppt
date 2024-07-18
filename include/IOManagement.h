@@ -29,6 +29,9 @@ extern volatile bool boostEnabled;
 enum class ChargeMode : bool {CONST_CURR, MPPT};
 extern volatile ChargeMode chargeMode;
 
+// pack charge percentage
+extern volatile float packSOC;
+
 // pack charge current limit
 extern volatile float packChargeCurrentLimit;
 

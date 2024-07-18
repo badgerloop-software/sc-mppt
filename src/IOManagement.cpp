@@ -39,6 +39,7 @@ DigitalOut OVFaultReset(OV_FAULT_RST_PIN, 0);
 DigitalOut capDischarge(DISCHARGE_CAPS_PIN, 1);
 
 // Pack charge current limit
+volatile float packSOC = 100;
 volatile float packChargeCurrentLimit = 10;
 volatile float packCurrent = 0; 
 
@@ -46,7 +47,7 @@ volatile float packCurrent = 0;
 volatile float outputCurrent = 0;
 
 // Charging algorithm mode
-volatile ChargeMode chargeMode = ChargeMode::MPPT;
+volatile ChargeMode chargeMode = ChargeMode::CONST_CURR;
 
 // Ticker to poll input readings at fixed rate
 Ticker dataUpdater;
@@ -85,8 +86,13 @@ void updateData() {
 
     outputCurrent = totalPower / battVolt; // only used in debug printouts now.
 
+    // Failed to program CONST_CURR_THRESH in time, change mode based on SOC instead
+    if (packSOC < 98) chargeMode = ChargeMode::MPPT;
+    else chargeMode = ChargeMode::CONST_CURR;
+    /*
     if (packCurrent > CONST_CURR_THRESH) chargeMode = ChargeMode::CONST_CURR;
     else if (packCurrent < MPPT_THRESH) chargeMode = ChargeMode::MPPT;
+    */
 }
 
 
