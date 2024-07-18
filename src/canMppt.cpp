@@ -14,6 +14,7 @@ void CANMPPT::readHandler(int messageID, SharedPtr<unsigned char> data, int leng
             break;
         case 0x101:
             packCurrent = ((data.get()[0] << 8) + data.get()[1]) * 0.1;
+            packSOC = (float)(data.get()[4]) / 2;
             break;
         case 0x103:
             packChargeCurrentLimit = (float)(*(uint16_t*)data.get()) * CONST_CURR_SAFETY_MULT;
@@ -35,7 +36,9 @@ void CANMPPT::sendMPPTData() {
         if (chargeMode == ChargeMode::MPPT) {
             this->sendMessage(0x406 + 5*i, (void*)&(targetVoltage[i]), sizeof(float));
         } else {
-            this->sendMessage(0x406 + 5*i, (void*)&(targetVoltage_C[i]), sizeof(float));
+            float temp = -1;
+            this->sendMessage(0x406 + 5*i, (void*)&temp, sizeof(float));
+            //this->sendMessage(0x406 + 5*i, (void*)&(targetVoltage_C[i]), sizeof(float));
         }
     }
 }
