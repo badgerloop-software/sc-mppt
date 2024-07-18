@@ -34,11 +34,11 @@ int main() {
         buf[0] = 0;
         printf("duty,voltage0,current0,voltage1,current1,voltage2,current2\n");
 
-        // increment mosfet output by .02 every 5 seconds and record data
-        for (float pwm_value = 0.0; pwm_value <= 1.0; pwm_value += .01) {
+        // increment mosfet output by .01 every 0.5 seconds and record data
+        for (float pwm_value = 0.0; pwm_value <= 0.5; pwm_value += .01) {
             // set mosfet outputs
             benchmarkUpdatePWM(pwm_value);
-            // wait 5 seconds for data
+            // wait 0.5s for data
             wait_us(500000);
             // print out voltage and current
             printf("%f,%f,%f,%f,%f,%f,%f\n", 
