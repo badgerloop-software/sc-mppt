@@ -72,7 +72,7 @@ void updateData() {
     }
 
     for (int i = 0; i < NUM_ARRAYS; i++) {
-        if (arrayData[i].voltage > V_MAX) {
+        if (arrayData[i].voltage > V_MAX || chargeMode == ChargeMode::CONST_CURR) {
             arrayPins[i].pwmPin.write(0);
         
         } else {
