@@ -21,6 +21,8 @@ constexpr float BATT_V_SCALE = 3.325 * 101;
 #define CURR_PIN_2 PA_5
 #define CURR_PIN_3 PA_3
 
+#define INA_SHUNT_R 0.01
+
 // Input pin to get battery voltage
 #define BATTERY_VOLT_PIN PB_0
 
