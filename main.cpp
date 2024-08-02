@@ -3,7 +3,6 @@
 #include "const.h"
 #include "IOManagement.h"
 #include "mppt.h"
-#include "terminal.h"
 
 
 #if DEBUG_PRINT == 1
