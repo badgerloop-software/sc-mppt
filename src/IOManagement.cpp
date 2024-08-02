@@ -11,9 +11,9 @@ struct ArrayPins {
 };
 
 ArrayPins arrayPins[NUM_ARRAYS] = {
-    {AnalogInMutexless(VOLT_PIN_1), INA281Driver(CURR_PIN_1, 0.01), PID(P_TERM, I_TERM, D_TERM, (float)IO_UPDATE_PERIOD.count() / 1000), FastPWM(PWM_OUT_1)},
-    {AnalogInMutexless(VOLT_PIN_2), INA281Driver(CURR_PIN_2, 0.01), PID(P_TERM, I_TERM, D_TERM, (float)IO_UPDATE_PERIOD.count() / 1000), FastPWM(PWM_OUT_2)},
-    {AnalogInMutexless(VOLT_PIN_3), INA281Driver(CURR_PIN_3, 0.01), PID(P_TERM, I_TERM, D_TERM, (float)IO_UPDATE_PERIOD.count() / 1000), FastPWM(PWM_OUT_3)}
+    {AnalogInMutexless(VOLT_PIN_1), INA281Driver(CURR_PIN_1, INA_SHUNT_R), PID(P_TERM, I_TERM, D_TERM, (float)IO_UPDATE_PERIOD.count() / 1000), FastPWM(PWM_OUT_1)},
+    {AnalogInMutexless(VOLT_PIN_2), INA281Driver(CURR_PIN_2, INA_SHUNT_R), PID(P_TERM, I_TERM, D_TERM, (float)IO_UPDATE_PERIOD.count() / 1000), FastPWM(PWM_OUT_2)},
+    {AnalogInMutexless(VOLT_PIN_3), INA281Driver(CURR_PIN_3, INA_SHUNT_R), PID(P_TERM, I_TERM, D_TERM, (float)IO_UPDATE_PERIOD.count() / 1000), FastPWM(PWM_OUT_3)}
     
 };
 
